@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 
 export default function AboutSection() {
@@ -45,10 +46,10 @@ export default function AboutSection() {
 
           <div className="md:w-1/2 grid grid-cols-2 gap-6">
             {[
-              { name: "Graphic Design", color: "from-pink-500 to-red-500", icon: "paint-brush" },
-              { name: "Math Education", color: "from-green-500 to-teal-500", icon: "chalkboard-teacher" },
-              { name: "Data Science", color: "from-blue-500 to-indigo-500", icon: "chart-line" },
-              { name: "Web Development", color: "from-gray-700 to-black", icon: "laptop-code" },
+              { name: "Graphic Design", color: "from-pink-500 to-red-500", icon: "paint-brush", description: "Creative designs for branding, marketing, and motion." },
+              { name: "Math Education", color: "from-green-500 to-teal-500", icon: "chalkboard-teacher", description: "Teaching complex mathematical concepts in simple ways." },
+              { name: "Data Science", color: "from-blue-500 to-indigo-500", icon: "chart-line", description: "Analyzing data to provide actionable insights using Python and ML." },
+              { name: "Web Development", color: "from-gray-700 to-black", icon: "laptop-code", description: "Building intuitive and responsive websites with modern tools." },
             ].map((skill, idx) => (
               <div
                 key={idx}
@@ -58,13 +59,12 @@ export default function AboutSection() {
                   <i className={`fas fa-${skill.icon}`}></i>
                 </div>
                 <h3 className="text-lg font-medium mb-2 text-gray-100">{skill.name}</h3>
+                <p className="text-gray-100 text-sm">{skill.description}</p>
               </div>
             ))}
           </div>
         </div>
       </div>
-
-      
 
       <style jsx>{`
         .glow-effect {
@@ -81,6 +81,36 @@ export default function AboutSection() {
         .animate-gradient {
           animation: gradientBorder 3s infinite alternate;
           border-width: 3px;
+        }
+
+        /* Custom gradient border animation */
+        .animate-gradient {
+          position: relative;
+          overflow: hidden;
+        }
+        .animate-gradient:before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          border-radius: 12px;
+          background: linear-gradient(45deg, #070707, #687aff);
+          animation: rotate 8s linear infinite;
+          z-index: -1;
+        }
+
+        @keyframes rotate {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        /* Add rotation to the border effect */
+        .animate-gradient {
+          border: 3px solid transparent;
+          border-radius: 12px;
         }
       `}</style>
     </section>
