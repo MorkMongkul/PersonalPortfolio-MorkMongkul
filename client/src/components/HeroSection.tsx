@@ -34,7 +34,7 @@ export default function HeroSection() {
           <div className="md:w-1/2 mb-10 md:mb-0">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4">
               <span className="text-dark">Hi, I'm </span>
-              <span className="text-primary">Jane Doe</span>
+              <span className="text-primary">MORK Mongkul</span>
             </h1>
             <div className="relative mb-6">
               <div 
@@ -68,8 +68,8 @@ export default function HeroSection() {
               <div className="absolute -bottom-3 -right-3 w-full h-full bg-[#10B981]/10 rounded-full"></div>
               <div className="absolute inset-4 bg-white rounded-full flex items-center justify-center">
                 <img 
-                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
-                  alt="Jane Doe" 
+                  src="/profile.jpeg" 
+                  alt="MORK Mongkul" 
                   className="rounded-full w-full h-full object-cover"
                 />
               </div>

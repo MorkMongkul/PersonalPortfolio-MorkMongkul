@@ -53,7 +53,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center">
-            <span className="text-xl font-accent font-bold text-primary">Jane Doe</span>
+            <span className="text-xl font-accent font-bold text-primary">MORK Mongkul</span>
             <span className="ml-2 text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-500">Portfolio</span>
           </div>
           
