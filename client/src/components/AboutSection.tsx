@@ -72,12 +72,12 @@ export default function AboutSection() {
                 </p>
               </div>
 
-              <div className="bg-light p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow dark:bg-darker dark:text-white"> {/* Added dark mode styles */}
-                <div className="text-gray-700 mb-2 dark:text-foreground/80"> {/* Added dark mode color */}
+              <div className="bg-background p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                <div className="text-foreground/80 mb-2">
                   <i className="fas fa-laptop-code text-2xl"></i>
                 </div>
-                <h3 className="text-lg font-medium mb-2 dark:text-white">Web Development</h3>
-                <p className="text-foreground/60 text-sm dark:text-foreground/60"> {/* Applied dark mode text color */}
+                <h3 className="text-lg font-medium mb-2 text-foreground">Web Development</h3>
+                <p className="text-foreground/60 text-sm">
                   Building responsive and interactive web experiences with modern technologies.
                 </p>
               </div>
