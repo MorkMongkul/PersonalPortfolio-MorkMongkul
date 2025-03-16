@@ -1,9 +1,14 @@
 import { useEffect, useRef } from "react";
 import { designSkills, mathSkills, dataSkills } from "@/lib/constants";
+import { MdOutlineDesignServices } from "react-icons/md";
+import { PiMathOperationsBold } from "react-icons/pi";
+import { TbMathFunction } from "react-icons/tb";
+import { GoDatabase } from "react-icons/go";
+import { SiDatadog } from "react-icons/si";
 
 type SkillCardProps = {
   title: string;
-  icon: string;
+  icon: React.ReactNode;
   color: string;
   bgColor: string;
   skills: Array<{ name: string; percentage: number }>;
@@ -11,10 +16,10 @@ type SkillCardProps = {
 
 function SkillCard({ title, icon, color, bgColor, skills }: SkillCardProps) {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm">
+    <div className="bg-white p-6 rounded-lg shadow-sm dark:bg-gray-800">
       <div className="flex items-center mb-8">
         <div className={`w-12 h-12 rounded-lg ${bgColor} flex items-center justify-center ${color} mr-4`}>
-          <i className={`${icon} text-xl`}></i>
+          <span className="text-2xl">{icon}</span>
         </div>
         <h3 className="text-xl font-semibold">{title}</h3>
       </div>
@@ -78,7 +83,7 @@ export default function SkillsSection() {
         <div ref={skillsRef} className="grid grid-cols-1 md:grid-cols-3 gap-12">
           <SkillCard 
             title="Graphic Design" 
-            icon="fas fa-palette" 
+            icon={<MdOutlineDesignServices />} 
             color="text-[#EC4899]" 
             bgColor="bg-[#EC4899]/10" 
             skills={designSkills}
@@ -86,7 +91,7 @@ export default function SkillsSection() {
           
           <SkillCard 
             title="Math Education" 
-            icon="fas fa-square-root-alt" 
+            icon={<TbMathFunction />} 
             color="text-[#10B981]" 
             bgColor="bg-[#10B981]/10" 
             skills={mathSkills}
@@ -94,7 +99,7 @@ export default function SkillsSection() {
           
           <SkillCard 
             title="Data Science" 
-            icon="fas fa-database" 
+            icon={<GoDatabase />} 
             color="text-primary" 
             bgColor="bg-primary/10" 
             skills={dataSkills}
@@ -102,7 +107,7 @@ export default function SkillsSection() {
         </div>
       </div>
       
-      <style jsx>{`
+      <style>{`
         .section-header::after {
           content: '';
           display: block;

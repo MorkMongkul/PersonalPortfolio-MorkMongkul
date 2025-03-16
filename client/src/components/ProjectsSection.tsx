@@ -167,7 +167,7 @@ export default function ProjectsSection() {
         </div>
       </div>
       
-      <style jsx>{`
+      <style>{`
         .section-header::after {
           content: '';
           display: block;
