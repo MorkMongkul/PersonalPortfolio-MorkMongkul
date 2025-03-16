@@ -78,7 +78,7 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <h4 className="text-sm font-semibold text-gray-700 mb-1">Location</h4>
-                  <p className="text-gray-600">San Francisco, CA</p>
+                  <p className="text-gray-600">Phnom Penh Cambodia</p>
                 </div>
               </div>
               
@@ -88,7 +88,7 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <h4 className="text-sm font-semibold text-gray-700 mb-1">Email</h4>
-                  <p className="text-gray-600">mork.mongkul@example.com</p>
+                  <p className="text-gray-600">monkholmama123@gmail.com</p>
                 </div>
               </div>
               
@@ -98,7 +98,7 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <h4 className="text-sm font-semibold text-gray-700 mb-1">Phone</h4>
-                  <p className="text-gray-600">(123) 456-7890</p>
+                  <p className="text-gray-600">0963098672</p>
                 </div>
               </div>
             </div>
@@ -189,18 +189,7 @@ export default function ContactSection() {
         </div>
       </div>
       
-      <style jsx>{`
-        .section-header::after {
-          content: '';
-          display: block;
-          width: 50px;
-          height: 3px;
-          background-color: #3B82F6;
-          margin-top: 8px;
-          margin-left: auto;
-          margin-right: auto;
-        }
-      `}</style>
+
     </section>
   );
 }
