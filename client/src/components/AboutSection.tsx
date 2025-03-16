@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Spline from "@splinetool/react-spline";
 
 export default function AboutSection() {
   const text = "About Me";
@@ -65,10 +64,7 @@ export default function AboutSection() {
         </div>
       </div>
 
-      {/* 3D Robot Following Cursor */}
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-        <Spline scene="https://prod.spline.design/gOKe4Vhy1Uijk9n8/scene.splinecode" />
-      </div>
+      
 
       <style jsx>{`
         .glow-effect {
