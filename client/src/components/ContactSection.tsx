@@ -36,9 +36,19 @@ export default function ContactSection() {
     setIsSubmitting(true);
     
     try {
-      // In a real application, you would send this data to your backend
-      // For this demo, we'll simulate the API call with a timeout
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Send data to our backend API
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to send message');
+      }
       
       toast({
         title: "Message sent successfully!",
@@ -47,9 +57,10 @@ export default function ContactSection() {
       
       form.reset();
     } catch (error) {
+      console.error('Error submitting contact form:', error);
       toast({
         title: "Something went wrong",
-        description: "Your message couldn't be sent. Please try again later.",
+        description: error instanceof Error ? error.message : "Your message couldn't be sent. Please try again later.",
         variant: "destructive",
       });
     } finally {

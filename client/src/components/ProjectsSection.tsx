@@ -1,19 +1,32 @@
-import { useState } from "react";
-import { projects } from "@/lib/constants";
+import { useState, useEffect } from "react";
+import { projects as fallbackProjects } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { Project } from "@shared/schema";
 
 type FilterType = "all" | "design" | "education" | "data";
 
 export default function ProjectsSection() {
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
 
+  // Fetch projects from the database
+  const { data: projects, isLoading, isError } = useQuery({
+    queryKey: ['/api/projects', activeFilter],
+    queryFn: () => {
+      const url = activeFilter === 'all' 
+        ? '/api/projects' 
+        : `/api/projects?category=${activeFilter}`;
+      return apiRequest<Project[]>(url);
+    }
+  });
+
   const handleFilterChange = (filter: FilterType) => {
     setActiveFilter(filter);
   };
 
-  const filteredProjects = activeFilter === "all" 
-    ? projects 
-    : projects.filter(project => project.category === activeFilter);
+  // Use database projects if available, otherwise use fallback
+  const displayProjects = projects || fallbackProjects;
 
   return (
     <section id="projects" className="py-16 md:py-24 bg-white">
@@ -69,46 +82,68 @@ export default function ProjectsSection() {
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project) => (
-            <div className="project-card group" key={project.id}>
-              <div className="relative overflow-hidden rounded-lg shadow-md">
-                <img 
-                  src={project.image} 
-                  alt={project.title} 
-                  className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className="project-overlay absolute inset-0 bg-gradient-to-t from-dark/80 to-dark/20 opacity-0 transition-opacity duration-300 flex flex-col justify-end p-6">
-                  <span className={`text-xs font-medium ${
-                    project.category === "design" 
-                      ? "text-[#EC4899] bg-[#EC4899]/10" 
-                      : project.category === "education" 
-                        ? "text-[#10B981] bg-[#10B981]/10" 
-                        : "text-primary bg-primary/10"
-                  } px-2 py-1 rounded-full w-max mb-2`}>
-                    {project.category === "design" 
-                      ? "Graphic Design" 
-                      : project.category === "education" 
-                        ? "Education" 
-                        : "Data Science"}
-                  </span>
-                  <h3 className="text-white text-xl font-medium mb-2">{project.title}</h3>
-                  <p className="text-gray-200 text-sm mb-4">{project.description}</p>
-                  <a 
-                    href={project.link} 
-                    className={`text-white text-sm ${
-                      project.category === "design" 
-                        ? "hover:text-[#EC4899]" 
-                        : project.category === "education" 
-                          ? "hover:text-[#10B981]" 
-                          : "hover:text-primary"
-                    } transition-colors`}
-                  >
-                    View Project <i className="fas fa-arrow-right ml-1"></i>
-                  </a>
+          {isLoading ? (
+            // Show loading placeholders
+            Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="project-card animate-pulse">
+                <div className="relative overflow-hidden rounded-lg shadow-md">
+                  <div className="w-full h-64 bg-gray-200"></div>
                 </div>
               </div>
+            ))
+          ) : isError ? (
+            // Show error message
+            <div className="col-span-full text-center py-10">
+              <p className="text-red-500">Failed to load projects. Please try again later.</p>
             </div>
-          ))}
+          ) : displayProjects.length === 0 ? (
+            // Show empty state
+            <div className="col-span-full text-center py-10">
+              <p className="text-gray-500">No projects found in this category.</p>
+            </div>
+          ) : (
+            // Display projects
+            displayProjects.map((project) => (
+              <div className="project-card group" key={project.id}>
+                <div className="relative overflow-hidden rounded-lg shadow-md">
+                  <img 
+                    src={project.image || project.image_url || '/placeholder-project.jpg'} 
+                    alt={project.title} 
+                    className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="project-overlay absolute inset-0 bg-gradient-to-t from-dark/80 to-dark/20 opacity-0 transition-opacity duration-300 flex flex-col justify-end p-6">
+                    <span className={`text-xs font-medium ${
+                      project.category === "design" 
+                        ? "text-[#EC4899] bg-[#EC4899]/10" 
+                        : project.category === "education" 
+                          ? "text-[#10B981] bg-[#10B981]/10" 
+                          : "text-primary bg-primary/10"
+                    } px-2 py-1 rounded-full w-max mb-2`}>
+                      {project.category === "design" 
+                        ? "Graphic Design" 
+                        : project.category === "education" 
+                          ? "Education" 
+                          : "Data Science"}
+                    </span>
+                    <h3 className="text-white text-xl font-medium mb-2">{project.title}</h3>
+                    <p className="text-gray-200 text-sm mb-4">{project.description}</p>
+                    <a 
+                      href={project.link || project.project_url || '#'} 
+                      className={`text-white text-sm ${
+                        project.category === "design" 
+                          ? "hover:text-[#EC4899]" 
+                          : project.category === "education" 
+                            ? "hover:text-[#10B981]" 
+                            : "hover:text-primary"
+                      } transition-colors`}
+                    >
+                      View Project <i className="fas fa-arrow-right ml-1"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
         
         <div className="mt-12 text-center">
