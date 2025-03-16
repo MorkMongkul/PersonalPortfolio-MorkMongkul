@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import Spline from "@splinetool/react-spline/next";
+import Spline from "@splinetool/react-spline";
 
 export default function HeroSection() {
   const [professionIndex, setProfessionIndex] = useState(0);
