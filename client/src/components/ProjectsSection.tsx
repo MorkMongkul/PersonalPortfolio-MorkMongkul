@@ -29,50 +29,50 @@ export default function ProjectsSection() {
   const displayProjects = projects || fallbackProjects;
 
   return (
-    <section id="projects" className="py-16 md:py-24 bg-white">
+    <section id="projects" className="py-16 md:py-24 bg-white dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="section-header text-3xl md:text-4xl font-bold mb-4 text-center">My Projects</h2>
-        <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
+        <h2 className="section-header text-3xl md:text-4xl font-bold mb-4 text-center dark:text-white">My Projects</h2>
+        <p className="text-gray-600 dark:text-gray-400 text-center mb-12 max-w-2xl mx-auto">
           A selection of my recent work across graphic design, educational content, and data analysis projects.
         </p>
         
         <div className="mb-8 flex justify-center">
-          <div className="inline-flex p-1 bg-gray-100 rounded-lg">
+          <div className="inline-flex p-1 bg-gray-100 dark:bg-gray-800 rounded-lg">
             <button 
-              className={`px-4 py-2 rounded-lg ${
+              className={`px-4 py-2 rounded-lg transition-all duration-300 ${
                 activeFilter === "all" 
-                  ? "bg-primary text-white" 
-                  : "text-gray-700 hover:text-primary"
+                  ? "bg-white dark:bg-gray-700 shadow-sm" 
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
               }`}
               onClick={() => handleFilterChange("all")}
             >
               All
             </button>
             <button 
-              className={`px-4 py-2 rounded-lg ${
+              className={`px-4 py-2 rounded-lg transition-all duration-300 ${
                 activeFilter === "design" 
-                  ? "bg-primary text-white" 
-                  : "text-gray-700 hover:text-primary"
+                  ? "bg-[#EC4899]/10 text-[#EC4899] font-medium shadow-sm" 
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
               }`}
               onClick={() => handleFilterChange("design")}
             >
               Design
             </button>
             <button 
-              className={`px-4 py-2 rounded-lg ${
+              className={`px-4 py-2 rounded-lg transition-all duration-300 ${
                 activeFilter === "education" 
-                  ? "bg-primary text-white" 
-                  : "text-gray-700 hover:text-primary"
+                  ? "bg-[#10B981]/10 text-[#10B981] font-medium shadow-sm" 
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
               }`}
               onClick={() => handleFilterChange("education")}
             >
               Education
             </button>
             <button 
-              className={`px-4 py-2 rounded-lg ${
+              className={`px-4 py-2 rounded-lg transition-all duration-300 ${
                 activeFilter === "data" 
-                  ? "bg-primary text-white" 
-                  : "text-gray-700 hover:text-primary"
+                  ? "bg-primary/10 text-primary font-medium shadow-sm" 
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
               }`}
               onClick={() => handleFilterChange("data")}
             >
@@ -87,7 +87,7 @@ export default function ProjectsSection() {
             Array.from({ length: 3 }).map((_, index) => (
               <div key={index} className="project-card animate-pulse">
                 <div className="relative overflow-hidden rounded-lg shadow-md">
-                  <div className="w-full h-64 bg-gray-200"></div>
+                  <div className="w-full h-64 bg-gray-200 dark:bg-gray-700"></div>
                 </div>
               </div>
             ))
@@ -99,7 +99,7 @@ export default function ProjectsSection() {
           ) : displayProjects.length === 0 ? (
             // Show empty state
             <div className="col-span-full text-center py-10">
-              <p className="text-gray-500">No projects found in this category.</p>
+              <p className="text-gray-500 dark:text-gray-400">No projects found in this category.</p>
             </div>
           ) : (
             // Display projects
@@ -151,7 +151,7 @@ export default function ProjectsSection() {
                             : "hover:text-primary"
                       } transition-colors`}
                     >
-                      View Project <i className="fas fa-arrow-right ml-1"></i>
+                      View Project <span className="ml-1">→</span>
                     </a>
                   </div>
                 </div>
@@ -180,6 +180,11 @@ export default function ProjectsSection() {
         }
         .project-card:hover .project-overlay {
           opacity: 1;
+        }
+        @media (prefers-color-scheme: dark) {
+          .section-header::after {
+            background-color: #60A5FA;
+          }
         }
       `}</style>
     </section>
