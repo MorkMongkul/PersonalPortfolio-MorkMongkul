@@ -19,7 +19,7 @@ export default function AboutSection() {
   }, [index]);
 
   return (
-    <section id="about" className="py-16 md:py-24 bg-white dark:bg-gray-900 relative"> 
+    <section id="about" className="py-16 md:py-24 bg-white dark:bg-gray-900 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center text-gray-900 dark:text-gray-100">
           {displayText}
@@ -27,7 +27,7 @@ export default function AboutSection() {
 
         <div className="flex flex-col md:flex-row gap-12 relative">
           <div className="md:w-1/2 relative">
-            <p className="text-gray-700 mb-6 leading-relaxed dark:text-gray-300"> 
+            <p className="text-gray-700 mb-6 leading-relaxed dark:text-gray-300">
               I am a <span className="text-[#EC4899] font-medium dark:text-pink-400">Senior Graphic Designer</span> with nearly five years of experience,
               specializing in branding, marketing visuals, and motion design. Proficient in Adobe Photoshop, Illustrator, Premiere Pro, and Cinema 4D.
             </p>
@@ -46,14 +46,14 @@ export default function AboutSection() {
 
           <div className="md:w-1/2 grid grid-cols-2 gap-6">
             {[
-              { name: "Graphic Design", color: "from-pink-500 to-red-500", icon: "paint-brush", description: "Creative designs for branding, marketing, and motion." },
-              { name: "Math Education", color: "from-green-500 to-teal-500", icon: "chalkboard-teacher", description: "Teaching complex mathematical concepts in simple ways." },
-              { name: "Data Science", color: "from-blue-500 to-indigo-500", icon: "chart-line", description: "Analyzing data to provide actionable insights using Python and ML." },
-              { name: "Web Development", color: "from-gray-700 to-black", icon: "laptop-code", description: "Building intuitive and responsive websites with modern tools." },
+              { name: "Graphic Design", icon: "paint-brush", description: "Creative designs for branding, marketing, and motion." },
+              { name: "Math Education", icon: "chalkboard-teacher", description: "Teaching complex mathematical concepts in simple ways." },
+              { name: "Data Science", icon: "chart-line", description: "Analyzing data to provide actionable insights using Python and ML." },
+              { name: "Web Development", icon: "laptop-code", description: "Building intuitive and responsive websites with modern tools." },
             ].map((skill, idx) => (
               <div
                 key={idx}
-                className={`relative p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow dark:bg-gray-800 border-2 border-transparent bg-gradient-to-br ${skill.color} animate-gradient`}
+                className="relative p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow dark:bg-gray-900 border-2 border-transparent animate-gradient"
               >
                 <div className="text-gray-100 mb-2 text-2xl">
                   <i className={`fas fa-${skill.icon}`}></i>
@@ -81,10 +81,6 @@ export default function AboutSection() {
         .animate-gradient {
           animation: gradientBorder 3s infinite alternate;
           border-width: 3px;
-        }
-
-        /* Custom gradient border animation */
-        .animate-gradient {
           position: relative;
           overflow: hidden;
         }
@@ -107,7 +103,6 @@ export default function AboutSection() {
           }
         }
 
-        /* Add rotation to the border effect */
         .animate-gradient {
           border: 3px solid transparent;
           border-radius: 12px;
