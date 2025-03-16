@@ -15,10 +15,6 @@
     color-scheme: dark;
   }
 
-  body.dark {
-    @apply bg-gray-900 text-gray-100;
-  }
-  
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -28,4 +24,25 @@
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
   }
+}
+
+/* Custom Nav Link Styling */
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #3B82F6;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after, 
+.nav-link.active::after {
+  width: 100%;
 }

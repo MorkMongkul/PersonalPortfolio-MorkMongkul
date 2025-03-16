@@ -113,21 +113,7 @@ export default function Header() {
         </div>
       </div>
       
-      <style jsx>{`
-        .nav-link::after {
-          content: '';
-          position: absolute;
-          bottom: -5px;
-          left: 0;
-          width: 0;
-          height: 2px;
-          background-color: #3B82F6;
-          transition: width 0.3s ease;
-        }
-        .nav-link:hover::after, .nav-link.active::after {
-          width: 100%;
-        }
-      `}</style>
+
     </header>
   );
 }
