@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { projects as fallbackProjects } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import { Project } from "@shared/schema";
+import type { Project } from "@shared/schema";
 
 type FilterType = "all" | "design" | "education" | "data";
 
@@ -11,13 +11,13 @@ export default function ProjectsSection() {
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
 
   // Fetch projects from the database
-  const { data: projects, isLoading, isError } = useQuery({
+  const { data: projects, isLoading, isError } = useQuery<Project[]>({
     queryKey: ['/api/projects', activeFilter],
-    queryFn: () => {
+    queryFn: async () => {
       const url = activeFilter === 'all' 
         ? '/api/projects' 
         : `/api/projects?category=${activeFilter}`;
-      return apiRequest<Project[]>(url);
+      return await apiRequest<Project[]>(url);
     }
   });
 
@@ -107,7 +107,14 @@ export default function ProjectsSection() {
               <div className="project-card group" key={project.id}>
                 <div className="relative overflow-hidden rounded-lg shadow-md">
                   <img 
-                    src={project.image || project.image_url || '/placeholder-project.jpg'} 
+                    src={
+                      // Handle both database and fallback project image paths
+                      'image_url' in project 
+                        ? (project.image_url || '/placeholder-project.jpg')
+                        : ('image' in project 
+                            ? project.image 
+                            : '/placeholder-project.jpg')
+                    } 
                     alt={project.title} 
                     className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
                   />
@@ -128,7 +135,14 @@ export default function ProjectsSection() {
                     <h3 className="text-white text-xl font-medium mb-2">{project.title}</h3>
                     <p className="text-gray-200 text-sm mb-4">{project.description}</p>
                     <a 
-                      href={project.link || project.project_url || '#'} 
+                      href={
+                        // Handle both database and fallback project URLs
+                        'project_url' in project 
+                          ? (project.project_url || '#')
+                          : ('link' in project 
+                              ? project.link 
+                              : '#')
+                      } 
                       className={`text-white text-sm ${
                         project.category === "design" 
                           ? "hover:text-[#EC4899]" 

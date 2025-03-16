@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { socialLinks } from "@/lib/constants";
 import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 
 const contactFormSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -36,19 +37,8 @@ export default function ContactSection() {
     setIsSubmitting(true);
     
     try {
-      // Send data to our backend API
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to send message');
-      }
+      // Send data to our backend API using our apiRequest utility
+      await apiRequest('POST', '/api/contact', data);
       
       toast({
         title: "Message sent successfully!",
