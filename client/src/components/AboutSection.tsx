@@ -1,104 +1,90 @@
+import { useEffect, useState } from "react";
+import Spline from "@splinetool/react-spline";
 
 export default function AboutSection() {
+  const text = "About Me";
+  const [displayText, setDisplayText] = useState("_");
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (index < text.length) {
+      const timeout = setTimeout(() => {
+        setDisplayText((prev) => prev.slice(0, -1) + text[index] + "_");
+        setIndex((prevIndex) => prevIndex + 1);
+      }, Math.random() * 200 + 50);
+      return () => clearTimeout(timeout);
+    } else {
+      setDisplayText(text);
+    }
+  }, [index]);
+
   return (
-    <section id="about" className="py-16 md:py-24 bg-white dark:bg-gray-900"> {/* Fixed dark mode background */}
+    <section id="about" className="py-16 md:py-24 bg-white dark:bg-gray-900 relative"> 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="section-header text-3xl md:text-4xl font-bold mb-12 text-center text-gray-900 dark:text-gray-100">
-          About Me
+        <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center text-gray-900 dark:text-gray-100">
+          {displayText}
         </h2>
 
-        <div className="flex flex-col md:flex-row gap-12">
-          <div className="md:w-1/2">
+        <div className="flex flex-col md:flex-row gap-12 relative">
+          <div className="md:w-1/2 relative">
             <p className="text-gray-700 mb-6 leading-relaxed dark:text-gray-300"> 
-              With over 8 years of professional experience, I've developed a unique interdisciplinary approach that combines 
-              <span className="text-[#EC4899] font-medium dark:text-pink-400"> graphic design</span>, 
-              <span className="text-[#10B981] font-medium dark:text-green-400"> mathematics education</span>, and 
-              <span className="text-blue-600 font-medium dark:text-blue-400"> data science</span> expertise.
+              I am a <span className="text-[#EC4899] font-medium dark:text-pink-400">Senior Graphic Designer</span> with nearly five years of experience,
+              specializing in branding, marketing visuals, and motion design. Proficient in Adobe Photoshop, Illustrator, Premiere Pro, and Cinema 4D.
             </p>
             <p className="text-gray-700 mb-6 leading-relaxed dark:text-gray-300">
-              My journey began in design, creating visual identities for brands that tell compelling stories. This creative 
-              foundation later complemented my passion for education, where I taught advanced mathematics and developed 
-              innovative teaching methodologies.
+              Beyond design, I am pursuing a degree in <span className="text-[#10B981] font-medium dark:text-green-400">Data Science and Engineering</span>,
+              focusing on Python, data analysis, visualization, and machine learning. My ability to blend creativity with data-driven insights allows
+              me to craft impactful and strategic designs. Passionate about teaching and inspiring future designers.
             </p>
-            <p className="text-gray-700 mb-6 leading-relaxed dark:text-gray-300">
-              In recent years, I've expanded into data science, using analytical skills to extract meaningful insights 
-              and create data visualizations that are both informative and visually engaging.
-            </p>
-            <div className="flex space-x-4 mb-6">
-              <a href="#" className="text-gray-600 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
-                <i className="fab fa-linkedin text-xl"></i>
-              </a>
-              <a href="#" className="text-gray-600 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
-                <i className="fab fa-github text-xl"></i>
-              </a>
-              <a href="#" className="text-gray-600 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
-                <i className="fab fa-behance text-xl"></i>
-              </a>
-              <a href="#" className="text-gray-600 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
-                <i className="fab fa-twitter text-xl"></i>
-              </a>
-            </div>
-            <a href="#" className="inline-flex items-center text-blue-600 hover:text-blue-500 font-medium dark:text-blue-400 dark:hover:text-blue-300">
-              Download Resume <i className="fas fa-download ml-2"></i>
+            <a
+              href="#"
+              className="mt-4 inline-block px-6 py-3 text-lg font-medium text-white bg-blue-600 rounded-lg shadow-lg transition transform hover:scale-105 hover:shadow-xl glow-effect"
+            >
+              Download CV
             </a>
           </div>
 
-          <div className="md:w-1/2">
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-100 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow dark:bg-gray-800">
-                <div className="text-[#EC4899] mb-2 dark:text-pink-400">
-                  <i className="fas fa-paint-brush text-2xl"></i>
+          <div className="md:w-1/2 grid grid-cols-2 gap-6">
+            {[
+              { name: "Graphic Design", color: "from-pink-500 to-red-500", icon: "paint-brush" },
+              { name: "Math Education", color: "from-green-500 to-teal-500", icon: "chalkboard-teacher" },
+              { name: "Data Science", color: "from-blue-500 to-indigo-500", icon: "chart-line" },
+              { name: "Web Development", color: "from-gray-700 to-black", icon: "laptop-code" },
+            ].map((skill, idx) => (
+              <div
+                key={idx}
+                className={`relative p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow dark:bg-gray-800 border-2 border-transparent bg-gradient-to-br ${skill.color} animate-gradient`}
+              >
+                <div className="text-gray-100 mb-2 text-2xl">
+                  <i className={`fas fa-${skill.icon}`}></i>
                 </div>
-                <h3 className="text-lg font-medium mb-2 text-gray-900 dark:text-gray-100">Graphic Design</h3>
-                <p className="text-gray-600 text-sm dark:text-gray-300">
-                  Creating visual identities, UI/UX design, and print materials with a focus on aesthetics and usability.
-                </p>
+                <h3 className="text-lg font-medium mb-2 text-gray-100">{skill.name}</h3>
               </div>
-
-              <div className="bg-gray-100 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow dark:bg-gray-800">
-                <div className="text-[#10B981] mb-2 dark:text-green-400">
-                  <i className="fas fa-chalkboard-teacher text-2xl"></i>
-                </div>
-                <h3 className="text-lg font-medium mb-2 text-gray-900 dark:text-gray-100">Math Education</h3>
-                <p className="text-gray-600 text-sm dark:text-gray-300">
-                  Developing engaging curriculum and teaching methodologies for advanced mathematics.
-                </p>
-              </div>
-
-              <div className="bg-gray-100 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow dark:bg-gray-800">
-                <div className="text-blue-600 mb-2 dark:text-blue-400">
-                  <i className="fas fa-chart-line text-2xl"></i>
-                </div>
-                <h3 className="text-lg font-medium mb-2 text-gray-900 dark:text-gray-100">Data Science</h3>
-                <p className="text-gray-600 text-sm dark:text-gray-300">
-                  Extracting insights from complex datasets and creating informative visualizations.
-                </p>
-              </div>
-
-              <div className="bg-gray-100 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow dark:bg-gray-800">
-                <div className="text-gray-700 mb-2 dark:text-gray-400">
-                  <i className="fas fa-laptop-code text-2xl"></i>
-                </div>
-                <h3 className="text-lg font-medium mb-2 text-gray-900 dark:text-gray-100">Web Development</h3>
-                <p className="text-gray-600 text-sm dark:text-gray-300">
-                  Building responsive and interactive web experiences with modern technologies.
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
 
+      {/* 3D Robot Following Cursor */}
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+        <Spline scene="https://prod.spline.design/gOKe4Vhy1Uijk9n8/scene.splinecode" />
+      </div>
+
       <style jsx>{`
-        .section-header::after {
-          content: '';
-          display: block;
-          width: 50px;
-          height: 3px;
-          background-color: #3B82F6;
-          margin-top: 8px;
-          margin-left: auto;
-          margin-right: auto;
+        .glow-effect {
+          box-shadow: 0px 0px 15px rgba(59, 130, 246, 0.8);
+        }
+
+        @keyframes gradientBorder {
+          0% { border-color: #ff00ff; }
+          25% { border-color: #00ffff; }
+          50% { border-color: #00ff00; }
+          75% { border-color: #ffff00; }
+          100% { border-color: #ff00ff; }
+        }
+        .animate-gradient {
+          animation: gradientBorder 3s infinite alternate;
+          border-width: 3px;
         }
       `}</style>
     </section>
