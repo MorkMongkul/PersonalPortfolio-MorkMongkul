@@ -1,35 +1,43 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
 
 export default function HeroSection() {
-  const professions = ["Graphic Designer", "Math Educator", "Data Scientist"];
   const [professionIndex, setProfessionIndex] = useState(0);
-  const [displayText, setDisplayText] = useState("");
-  const [charIndex, setCharIndex] = useState(0);
+  const [text, setText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const [cursorVisible, setCursorVisible] = useState(true);
+  const professions = ["Graphic Designer", "Math Educator", "Data Scientist"];
 
-  // Typing effect
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCursorVisible((prev) => !prev);
+    }, 500);
+    return () => clearInterval(intervalId);
+  }, []);
+
   useEffect(() => {
     const currentProfession = professions[professionIndex];
-    
+    let timer;
     if (isDeleting) {
-      if (charIndex > 0) {
-        setTimeout(() => setCharIndex(charIndex - 1), 50);
-      } else {
-        setIsDeleting(false);
-        setProfessionIndex((prev) => (prev + 1) % professions.length);
-      }
+      timer = setTimeout(() => {
+        setText((prev) => prev.slice(0, -1));
+      }, 100);
     } else {
-      if (charIndex < currentProfession.length) {
-        setTimeout(() => setCharIndex(charIndex + 1), 100);
-      } else {
-        setTimeout(() => setIsDeleting(true), 1000);
-      }
+      timer = setTimeout(() => {
+        setText((prev) => currentProfession.slice(0, prev.length + 1));
+      }, 150);
     }
-    setDisplayText(currentProfession.slice(0, charIndex));
-  }, [charIndex, isDeleting, professionIndex, professions]);
+
+    if (!isDeleting && text === currentProfession) {
+      setTimeout(() => setIsDeleting(true), 1000);
+    } else if (isDeleting && text === "") {
+      setIsDeleting(false);
+      setProfessionIndex((prev) => (prev + 1) % professions.length);
+    }
+
+    return () => clearTimeout(timer);
+  }, [text, isDeleting, professionIndex]);
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -44,50 +52,51 @@ export default function HeroSection() {
               <span className="text-dark dark:text-gray-200">Hi, I'm </span>
               <span className="text-primary">MORK Mongkul</span>
             </h1>
-            <div className="relative mb-6 text-xl md:text-2xl font-medium text-gray-600 dark:text-gray-300 h-8">
-              {displayText}
-              <span className="animate-blink">|</span>
+            <div className="text-xl md:text-2xl font-medium text-gray-600 dark:text-gray-300 h-8 flex">
+              {text}
+              <span className={cursorVisible ? "inline-block w-2 bg-gray-600 dark:bg-gray-300" : "opacity-0 w-2"}>
+                |
+              </span>
             </div>
             <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-lg">
-              Bringing creativity, analytical thinking, and educational expertise to every project. I blend design aesthetics with data-driven insights.
+              Bringing creativity, analytical thinking, and educational expertise 
+              to every project. I blend design aesthetics with data-driven insights.
             </p>
             <div className="flex space-x-4">
-              <Button onClick={() => scrollToSection("projects")}>
-                View My Work
-              </Button>
-              <Button variant="outline" onClick={() => scrollToSection("contact")}>
-                Contact Me
-              </Button>
+              <Button onClick={() => scrollToSection("projects")}>View My Work</Button>
+              <Button variant="outline" onClick={() => scrollToSection("contact")}>Contact Me</Button>
             </div>
           </div>
           <div className="md:w-1/2 flex justify-center">
-            <motion.div
-              className="relative w-64 h-64 md:w-80 md:h-80 rounded-full flex items-center justify-center overflow-hidden"
-              whileHover={{ scale: 1.1 }}
-              initial={{ scale: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <motion.div
-                className="absolute inset-0 rounded-full"
-                animate={{
-                  background: [
-                    "radial-gradient(circle, rgba(255,0,0,0.3) 0%, transparent 70%)",
-                    "radial-gradient(circle, rgba(0,255,0,0.3) 0%, transparent 70%)",
-                    "radial-gradient(circle, rgba(0,0,255,0.3) 0%, transparent 70%)",
-                    "radial-gradient(circle, rgba(255,0,0,0.3) 0%, transparent 70%)"
-                  ],
-                }}
-                transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
-              ></motion.div>
-              <img 
-                src="/profile.jpeg" 
-                alt="MORK Mongkul" 
-                className="rounded-full w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-              />
-            </motion.div>
+            <div className="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center">
+              <div className="absolute inset-0 animate-glow rounded-full"></div>
+              <div className="absolute inset-4 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center overflow-hidden">
+                <img 
+                  src="/profile.jpeg" 
+                  alt="MORK Mongkul" 
+                  className="rounded-full w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      <style jsx>{`
+        @keyframes glow {
+          0% { box-shadow: 0 0 20px #ff0000; }
+          25% { box-shadow: 0 0 20px #00ff00; }
+          50% { box-shadow: 0 0 20px #0000ff; }
+          75% { box-shadow: 0 0 20px #ff00ff; }
+          100% { box-shadow: 0 0 20px #ff0000; }
+        }
+        .animate-glow {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0) 70%);
+          animation: glow 5s infinite alternate;
+        }
+      `}</style>
     </section>
   );
 }
