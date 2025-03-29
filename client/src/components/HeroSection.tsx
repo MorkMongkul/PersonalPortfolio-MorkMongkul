@@ -1,6 +1,98 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import styled from "@emotion/styled";
+import { keyframes } from "@emotion/react";
+
+const float = keyframes`
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+`;
+
+const glow = keyframes`
+  0% { box-shadow: 0 0 20px #ff0000; }
+  25% { box-shadow: 0 0 20px #00ff00; }
+  50% { box-shadow: 0 0 20px #0000ff; }
+  75% { box-shadow: 0 0 20px #ff00ff; }
+  100% { box-shadow: 0 0 20px #ff0000; }
+`;
+
+const bounce = keyframes`
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-10px); }
+  60% { transform: translateY(-5px); }
+`;
+
+const ProfileContainer = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: ${float} 6s ease-in-out infinite;
+`;
+
+const GlowEffect = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0) 70%);
+  animation: ${glow} 5s infinite alternate;
+  border-radius: 50%;
+`;
+
+const ProfileImage = styled.div`
+  position: absolute;
+  inset: 16px;
+  background: white;
+  border-radius: 50%;
+  overflow: hidden;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+`;
+
+const SocialLinks = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  
+  a {
+    color: #6B7280;
+    transition: all 0.3s ease;
+    font-size: 1.5rem;
+    
+    &:hover {
+      color: #EC4899;
+      transform: translateY(-3px);
+    }
+  }
+`;
+
+const ScrollIndicator = styled.div`
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: ${bounce} 2s infinite;
+  cursor: pointer;
+  color: #6B7280;
+  transition: color 0.3s ease;
+  
+  &:hover {
+    color: #EC4899;
+  }
+`;
 
 export default function HeroSection() {
   const [professionIndex, setProfessionIndex] = useState(0);
@@ -44,13 +136,13 @@ export default function HeroSection() {
   };
 
   return (
-    <section id="home" className="pt-28 pb-16 md:pt-32 md:pb-24 bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-gray-800">
+    <section id="home" className="pt-28 pb-16 md:pt-32 md:pb-24 bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-gray-800 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <div className="md:w-1/2 mb-10 md:mb-0">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4">
               <span className="text-dark dark:text-gray-200">Hi, I'm </span>
-              <span className="text-primary">MORK Mongkul</span>
+              <span className="bg-gradient-to-r from-pink-500 to-cyan-500 bg-clip-text text-transparent">MORK Mongkul</span>
             </h1>
             <div className="text-xl md:text-2xl font-medium text-gray-600 dark:text-gray-300 h-8 flex">
               {text}
@@ -63,40 +155,52 @@ export default function HeroSection() {
               to every project. I blend design aesthetics with data-driven insights.
             </p>
             <div className="flex space-x-4">
-              <Button onClick={() => scrollToSection("projects")}>View My Work</Button>
-              <Button variant="outline" onClick={() => scrollToSection("contact")}>Contact Me</Button>
+              <Button 
+                onClick={() => scrollToSection("projects")}
+                className="bg-gradient-to-r from-pink-500 to-cyan-500 hover:from-pink-600 hover:to-cyan-600 transition-all duration-300"
+              >
+                View My Work
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => scrollToSection("contact")}
+                className="border-2 hover:bg-gradient-to-r hover:from-pink-500 hover:to-cyan-500 hover:border-transparent transition-all duration-300"
+              >
+                Contact Me
+              </Button>
             </div>
+            <SocialLinks>
+              <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer">
+                <i className="fab fa-github"></i>
+              </a>
+              <a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer">
+                <i className="fab fa-linkedin"></i>
+              </a>
+              <a href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer">
+                <i className="fab fa-twitter"></i>
+              </a>
+              <a href="https://instagram.com/yourusername" target="_blank" rel="noopener noreferrer">
+                <i className="fab fa-instagram"></i>
+              </a>
+            </SocialLinks>
           </div>
           <div className="md:w-1/2 flex justify-center">
-            <div className="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center">
-              <div className="absolute inset-0 animate-glow rounded-full"></div>
-              <div className="absolute inset-4 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center overflow-hidden">
+            <ProfileContainer>
+              <GlowEffect />
+              <ProfileImage>
                 <img 
-                  src="/profile.jpeg" 
+                  src="/Profile.jpeg" 
                   alt="MORK Mongkul" 
-                  className="rounded-full w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                  className="w-full h-full object-cover"
                 />
-              </div>
-            </div>
+              </ProfileImage>
+            </ProfileContainer>
           </div>
         </div>
       </div>
-      <style jsx>{`
-        @keyframes glow {
-          0% { box-shadow: 0 0 20px #ff0000; }
-          25% { box-shadow: 0 0 20px #00ff00; }
-          50% { box-shadow: 0 0 20px #0000ff; }
-          75% { box-shadow: 0 0 20px #ff00ff; }
-          100% { box-shadow: 0 0 20px #ff0000; }
-        }
-        .animate-glow {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0) 70%);
-          animation: glow 5s infinite alternate;
-        }
-      `}</style>
+      <ScrollIndicator onClick={() => scrollToSection("about")}>
+        <i className="fas fa-chevron-down text-2xl"></i>
+      </ScrollIndicator>
     </section>
   );
 }

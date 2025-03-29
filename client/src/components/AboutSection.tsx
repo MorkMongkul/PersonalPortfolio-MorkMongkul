@@ -1,10 +1,90 @@
+import { useEffect, useState, useRef } from "react";
+import styled from "@emotion/styled";
+import { keyframes } from "@emotion/react";
 
-import { useEffect, useState } from "react";
+const fadeIn = keyframes`
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
+const SkillBar = styled.div`
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  margin-top: 8px;
+`;
+
+interface SkillProgressProps {
+  width: number;
+}
+
+const SkillProgress = styled.div<SkillProgressProps>`
+  width: ${(props: SkillProgressProps) => props.width}%;
+  height: 100%;
+  background: linear-gradient(90deg, #ff00ff, #00ffff);
+  border-radius: 4px;
+  transition: width 1.5s ease-in-out;
+`;
+
+const SkillCard = styled.div`
+  position: relative;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease-in-out;
+  opacity: 0;
+  animation: ${fadeIn} 0.6s ease-out forwards;
+
+  h3 {
+    color: var(--tw-text-opacity);
+    font-weight: bold;
+  }
+
+  p {
+    color: var(--tw-text-opacity);
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 0px 20px rgba(255, 0, 255, 0.6),
+                0px 0px 30px rgba(0, 255, 255, 0.6);
+    background: linear-gradient(135deg,
+                rgba(255, 0, 255, 0.2),
+                rgba(0, 255, 255, 0.2));
+  }
+`;
 
 export default function AboutSection() {
   const text = "About Me";
   const [displayText, setDisplayText] = useState("_");
   const [index, setIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef(null);
+
+  const skills = [
+    { name: "Graphic Design", icon: "paint-brush", description: "Creative designs for branding, marketing, and motion.", proficiency: 90 },
+    { name: "Math Education", icon: "chalkboard-teacher", description: "Teaching complex mathematical concepts in simple ways.", proficiency: 85 },
+    { name: "Data Science", icon: "chart-line", description: "Analyzing data to provide actionable insights using Python and ML.", proficiency: 75 },
+    { name: "Web Development", icon: "laptop-code", description: "Building intuitive and responsive websites with modern tools.", proficiency: 80 },
+  ];
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (index < text.length) {
@@ -19,14 +99,32 @@ export default function AboutSection() {
   }, [index]);
 
   return (
-    <section id="about" className="py-16 md:py-24 bg-white dark:bg-gray-900 relative">
+    <section
+      ref={sectionRef}
+      id="about"
+      className="py-16 md:py-24 bg-white dark:bg-gray-900 relative"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center text-gray-900 dark:text-gray-100">
+        <h2 
+          className="text-3xl md:text-4xl font-bold mb-12 text-center bg-gradient-to-r from-pink-500 to-cyan-500 bg-clip-text text-transparent"
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: `translateY(${isVisible ? 0 : '20px'})`,
+            transition: 'opacity 0.6s ease-out, transform 0.6s ease-out'
+          }}
+        >
           {displayText}
         </h2>
 
         <div className="flex flex-col md:flex-row gap-12 relative">
-          <div className="md:w-1/2 relative">
+          <div 
+            className="md:w-1/2 relative"
+            style={{
+              opacity: isVisible ? 1 : 0,
+              transform: `translateX(${isVisible ? 0 : '-20px'})`,
+              transition: 'opacity 0.6s ease-out, transform 0.6s ease-out'
+            }}
+          >
             <p className="text-gray-700 mb-6 leading-relaxed dark:text-gray-300">
               I am a <span className="text-[#EC4899] font-medium dark:text-pink-400">Senior Graphic Designer</span> with nearly five years of experience,
               specializing in branding, marketing visuals, and motion design. Proficient in Adobe Photoshop, Illustrator, Premiere Pro, and Cinema 4D.
@@ -37,77 +135,41 @@ export default function AboutSection() {
               me to craft impactful and strategic designs. Passionate about teaching and inspiring future designers.
             </p>
             <a
-              href="#"
-              className="mt-4 inline-block px-6 py-3 text-lg font-medium text-white bg-blue-600 rounded-lg shadow-lg transition transform hover:scale-105 hover:shadow-xl glow-effect"
+              href="/cv_update_v2025.pdf"
+              download="cv_update_v2025.pdf"
+              className="mt-4 inline-block px-6 py-3 text-lg font-medium text-white bg-gradient-to-r from-pink-500 to-cyan-500 rounded-lg shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:from-pink-600 hover:to-cyan-600"
             >
               Download CV
             </a>
           </div>
 
-          <div className="md:w-1/2 grid grid-cols-2 gap-6">
-            {[
-              { name: "Graphic Design", icon: "paint-brush", description: "Creative designs for branding, marketing, and motion." },
-              { name: "Math Education", icon: "chalkboard-teacher", description: "Teaching complex mathematical concepts in simple ways." },
-              { name: "Data Science", icon: "chart-line", description: "Analyzing data to provide actionable insights using Python and ML." },
-              { name: "Web Development", icon: "laptop-code", description: "Building intuitive and responsive websites with modern tools." },
-            ].map((skill, idx) => (
-              <div
+          <div className="md:w-1/2 grid grid-cols-1 md:grid-cols-2 gap-6">
+            {skills.map((skill, idx) => (
+              <SkillCard
                 key={idx}
-                className="relative p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow dark:bg-gray-900 border-2 border-transparent animate-gradient"
+                style={{
+                  animationDelay: `${idx * 0.2}s`,
+                  opacity: isVisible ? 1 : 0
+                }}
               >
-                <div className="text-gray-100 mb-2 text-2xl">
+                <div className="text-gray-700 dark:text-gray-100 mb-2 text-2xl">
                   <i className={`fas fa-${skill.icon}`}></i>
                 </div>
-                <h3 className="text-lg font-medium mb-2 text-gray-100">{skill.name}</h3>
-                <p className="text-gray-100 text-sm">{skill.description}</p>
-              </div>
+                <h3 className="text-lg font-bold mb-2 text-gray-900 dark:text-white">{skill.name}</h3>
+                <p className="text-sm mb-4 text-gray-700 dark:text-gray-300">{skill.description}</p>
+                <SkillBar>
+                  <SkillProgress
+                    width={isVisible ? skill.proficiency : 0}
+                  />
+                </SkillBar>
+                <span className="text-xs text-gray-500 dark:text-gray-400 mt-2 block">
+                  {skill.proficiency}%
+                </span>
+              </SkillCard>
             ))}
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        .glow-effect {
-          box-shadow: 0px 0px 15px rgba(59, 130, 246, 0.8);
-        }
-
-        @keyframes gradientBorder {
-          0% { border-color: #ff00ff; }
-          25% { border-color: #00ffff; }
-          50% { border-color: #00ff00; }
-          75% { border-color: #ffff00; }
-          100% { border-color: #ff00ff; }
-        }
-        .animate-gradient {
-          animation: gradientBorder 3s infinite alternate;
-          border-width: 3px;
-          position: relative;
-          overflow: hidden;
-        }
-        .animate-gradient:before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          border-radius: 12px;
-          background: linear-gradient(45deg, #070707, #687aff);
-          animation: rotate 8s linear infinite;
-          z-index: -1;
-        }
-
-        @keyframes rotate {
-          to {
-            transform: rotate(360deg);
-          }
-        }
-
-        .animate-gradient {
-          border: 3px solid transparent;
-          border-radius: 12px;
-        }
-      `}</style>
     </section>
   );
 }

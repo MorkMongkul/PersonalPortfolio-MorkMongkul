@@ -6,14 +6,15 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { socialLinks } from "@/lib/constants";
+import { socialLinks, contactInfo } from "@/lib/constants";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import SplineScene from "./SplineScene";
 
 const contactFormSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   email: z.string().email({ message: "Please enter a valid email address." }),
-  subject: z.string().optional(),
+  subject: z.string().min(2, { message: "Subject must be at least 2 characters." }),
   message: z.string().min(10, { message: "Message must be at least 10 characters." }),
 });
 
@@ -37,8 +38,17 @@ export default function ContactSection() {
     setIsSubmitting(true);
     
     try {
-      // Send data to our backend API using our apiRequest utility
-      await apiRequest('POST', '/api/contact', data);
+      // Send email using a service like EmailJS or your own backend
+      const emailData = {
+        to_email: contactInfo.email,
+        from_name: data.name,
+        from_email: data.email,
+        subject: data.subject,
+        message: data.message,
+      };
+
+      // Send data to your backend API
+      await apiRequest('POST', '/api/contact', emailData);
       
       toast({
         title: "Message sent successfully!",
@@ -59,137 +69,50 @@ export default function ContactSection() {
   }
 
   return (
-    <section id="contact" className="py-16 md:py-24 bg-light">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="section-header text-3xl md:text-4xl font-bold mb-12 text-center">Get In Touch</h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <div>
-            <h3 className="text-2xl font-semibold mb-6">Contact Information</h3>
-            <p className="text-gray-600 mb-8">
-              I'm interested in freelance opportunities, collaborative projects, and teaching opportunities. 
-              If you have any questions or just want to say hello, don't hesitate to contact me.
-            </p>
-            
-            <div className="space-y-4 mb-8">
-              <div className="flex items-start">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-4">
-                  <i className="fas fa-map-marker-alt"></i>
-                </div>
-                <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-1">Location</h4>
-                  <p className="text-gray-600">Phnom Penh Cambodia</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-4">
-                  <i className="fas fa-envelope"></i>
-                </div>
-                <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-1">Email</h4>
-                  <p className="text-gray-600">monkholmama123@gmail.com</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-4">
-                  <i className="fas fa-phone"></i>
-                </div>
-                <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-1">Phone</h4>
-                  <p className="text-gray-600">0963098672</p>
-                </div>
-              </div>
-            </div>
-            
-            <h3 className="text-xl font-semibold mb-4">Connect with me</h3>
-            <div className="flex space-x-4">
-              {socialLinks.map((link, index) => (
-                <a 
-                  key={index}
-                  href={link.url} 
-                  className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors"
-                >
-                  <i className={link.icon}></i>
-                </a>
-              ))}
-            </div>
-          </div>
-          
-          <div>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="bg-white p-8 rounded-lg shadow-sm">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem className="mb-6">
-                      <FormLabel className="block text-gray-700 text-sm font-medium mb-2">Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Your name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem className="mb-6">
-                      <FormLabel className="block text-gray-700 text-sm font-medium mb-2">Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Your email address" type="email" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="subject"
-                  render={({ field }) => (
-                    <FormItem className="mb-6">
-                      <FormLabel className="block text-gray-700 text-sm font-medium mb-2">Subject</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Subject of your message" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="message"
-                  render={({ field }) => (
-                    <FormItem className="mb-6">
-                      <FormLabel className="block text-gray-700 text-sm font-medium mb-2">Message</FormLabel>
-                      <FormControl>
-                        <Textarea placeholder="Your message" rows={5} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <Button 
-                  type="submit" 
-                  className="w-full"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Sending..." : "Send Message"}
-                </Button>
-              </form>
-            </Form>
-          </div>
-        </div>
+    <section id="contact" className="relative min-h-screen bg-[#E8E9F3] flex flex-col items-center justify-center overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <SplineScene />
       </div>
       
-
+      {/* Social Icons - centered on the page */}
+      <div className="absolute top-[45%] left-[52.5%] transform -translate-x-1/2 z-20">
+        <div className="flex gap-6">
+          <a 
+            href={`mailto:${contactInfo.email}`}
+            className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-all transform hover:scale-110 shadow-lg"
+            aria-label="Email"
+          >
+            <i className="fa-solid fa-envelope text-xl"></i>
+          </a>
+          <a 
+            href={contactInfo.telegram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-600 hover:bg-[#0088cc] hover:text-white transition-all transform hover:scale-110 shadow-lg"
+            aria-label="Telegram"
+          >
+            <i className="fa-brands fa-telegram text-xl"></i>
+          </a>
+          <a 
+            href={contactInfo.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-600 hover:bg-[#0077b5] hover:text-white transition-all transform hover:scale-110 shadow-lg"
+            aria-label="LinkedIn"
+          >
+            <i className="fa-brands fa-linkedin-in text-xl"></i>
+          </a>
+          <a 
+            href={contactInfo.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-600 hover:bg-[#333] hover:text-white transition-all transform hover:scale-110 shadow-lg"
+            aria-label="GitHub"
+          >
+            <i className="fa-brands fa-github text-xl"></i>
+          </a>
+        </div>
+      </div>
     </section>
   );
 }

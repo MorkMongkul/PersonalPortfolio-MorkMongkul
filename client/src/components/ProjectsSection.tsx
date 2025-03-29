@@ -6,27 +6,118 @@ import { apiRequest } from "@/lib/queryClient";
 import type { Project } from "@shared/schema";
 
 type FilterType = "all" | "design" | "education" | "data";
+type DesignSubcategory = "branding" | "print" | "social";
+
+interface ProjectType {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  subcategory?: DesignSubcategory;
+  image: string;
+  link: string;
+}
 
 export default function ProjectsSection() {
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
 
-  // Fetch projects from the database
-  const { data: projects, isLoading, isError } = useQuery<Project[]>({
-    queryKey: ['/api/projects', activeFilter],
-    queryFn: async () => {
-      const url = activeFilter === 'all' 
-        ? '/api/projects' 
-        : `/api/projects?category=${activeFilter}`;
-      return await apiRequest<Project[]>(url);
+  // Filter projects based on active filter
+  const displayProjects = activeFilter === 'all'
+    ? fallbackProjects
+    : fallbackProjects.filter(project => project.category === activeFilter);
+
+  // Group design projects by subcategory
+  const groupedDesignProjects = displayProjects.reduce((acc, project) => {
+    if (project.category === 'design' && project.subcategory) {
+      const subcategory = project.subcategory as DesignSubcategory;
+      if (!acc[subcategory]) {
+        acc[subcategory] = [];
+      }
+      acc[subcategory].push(project as ProjectType);
     }
-  });
+    return acc;
+  }, {} as Record<DesignSubcategory, ProjectType[]>);
 
   const handleFilterChange = (filter: FilterType) => {
     setActiveFilter(filter);
   };
 
-  // Use database projects if available, otherwise use fallback
-  const displayProjects = projects || fallbackProjects;
+  const renderProjects = () => {
+    if (activeFilter === 'design') {
+      return Object.entries(groupedDesignProjects).map(([subcategory, projects]) => (
+        <div key={subcategory} className="col-span-full">
+          <h3 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white capitalize">
+            {subcategory === 'branding' ? 'Branding' :
+             subcategory === 'print' ? 'Print Ads' :
+             'Social Media'}
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {projects.map((project) => renderProjectCard(project))}
+          </div>
+        </div>
+      ));
+    }
+
+    return displayProjects.map((project) => renderProjectCard(project as ProjectType));
+  };
+
+  const renderProjectCard = (project: ProjectType) => (
+    <div 
+      className="project-card group" 
+      key={project.id}
+      style={{ 
+        opacity: 0,
+        animation: 'fadeIn 0.6s ease-out forwards',
+        animationDelay: `${project.id * 0.1}s`
+      }}
+    >
+      <div className="relative overflow-hidden rounded-xl shadow-lg transition-all duration-500 hover:shadow-2xl dark:shadow-gray-800/30">
+        <div className="relative h-72">
+          <img 
+            src={project.image}
+            alt={project.title} 
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-6 group-hover:translate-y-0 transition-transform duration-500">
+              <span className={`inline-block px-3 py-1 text-sm font-medium rounded-full mb-3 ${
+                project.category === "design" 
+                  ? "text-[#EC4899] bg-[#EC4899]/10" 
+                  : project.category === "education" 
+                    ? "text-[#10B981] bg-[#10B981]/10" 
+                    : "text-primary bg-primary/10"
+              }`}>
+                {project.category === "design" 
+                  ? "Graphic Design" 
+                  : project.category === "education" 
+                    ? "Education" 
+                    : "Data Science"}
+              </span>
+              <h3 className="text-xl font-bold text-white mb-2">{project.title}</h3>
+              <p className="text-gray-200 text-sm mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                {project.description}
+              </p>
+              <a 
+                href={project.link}
+                className={`inline-flex items-center text-sm font-medium ${
+                  project.category === "design" 
+                    ? "text-[#EC4899] hover:text-[#EC4899]/80" 
+                    : project.category === "education" 
+                      ? "text-[#10B981] hover:text-[#10B981]/80" 
+                      : "text-primary hover:text-primary/80"
+                } transition-colors`}
+              >
+                View Project
+                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <section id="projects" className="py-16 md:py-24 bg-white dark:bg-gray-900">
@@ -81,112 +172,60 @@ export default function ProjectsSection() {
           </div>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {isLoading ? (
-            // Show loading placeholders
-            Array.from({ length: 3 }).map((_, index) => (
-              <div key={index} className="project-card animate-pulse">
-                <div className="relative overflow-hidden rounded-lg shadow-md">
-                  <div className="w-full h-64 bg-gray-200 dark:bg-gray-700"></div>
-                </div>
-              </div>
-            ))
-          ) : isError ? (
-            // Show error message
-            <div className="col-span-full text-center py-10">
-              <p className="text-red-500">Failed to load projects. Please try again later.</p>
-            </div>
-          ) : displayProjects.length === 0 ? (
+        <div className="grid grid-cols-1 gap-8">
+          {displayProjects.length === 0 ? (
             // Show empty state
             <div className="col-span-full text-center py-10">
               <p className="text-gray-500 dark:text-gray-400">No projects found in this category.</p>
             </div>
           ) : (
             // Display projects
-            displayProjects.map((project) => (
-              <div className="project-card group" key={project.id}>
-                <div className="relative overflow-hidden rounded-lg shadow-md">
-                  <img 
-                    src={
-                      // Handle both database and fallback project image paths
-                      'image_url' in project 
-                        ? (project.image_url || '/placeholder-project.jpg')
-                        : ('image' in project 
-                            ? project.image 
-                            : '/placeholder-project.jpg')
-                    } 
-                    alt={project.title} 
-                    className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="project-overlay absolute inset-0 bg-gradient-to-t from-dark/80 to-dark/20 opacity-0 transition-opacity duration-300 flex flex-col justify-end p-6">
-                    <span className={`text-xs font-medium ${
-                      project.category === "design" 
-                        ? "text-[#EC4899] bg-[#EC4899]/10" 
-                        : project.category === "education" 
-                          ? "text-[#10B981] bg-[#10B981]/10" 
-                          : "text-primary bg-primary/10"
-                    } px-2 py-1 rounded-full w-max mb-2`}>
-                      {project.category === "design" 
-                        ? "Graphic Design" 
-                        : project.category === "education" 
-                          ? "Education" 
-                          : "Data Science"}
-                    </span>
-                    <h3 className="text-white text-xl font-medium mb-2">{project.title}</h3>
-                    <p className="text-gray-200 text-sm mb-4">{project.description}</p>
-                    <a 
-                      href={
-                        // Handle both database and fallback project URLs
-                        'project_url' in project 
-                          ? (project.project_url || '#')
-                          : ('link' in project 
-                              ? project.link 
-                              : '#')
-                      } 
-                      className={`text-white text-sm ${
-                        project.category === "design" 
-                          ? "hover:text-[#EC4899]" 
-                          : project.category === "education" 
-                            ? "hover:text-[#10B981]" 
-                            : "hover:text-primary"
-                      } transition-colors`}
-                    >
-                      View Project <span className="ml-1">→</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            ))
+            renderProjects()
           )}
         </div>
         
         <div className="mt-12 text-center">
-          <Button variant="outline">
+          <Button 
+            variant="outline"
+            className="px-8 py-3 text-lg font-medium border-2 hover:bg-gradient-to-r hover:from-pink-500 hover:to-violet-500 hover:border-transparent hover:text-white transition-all duration-300"
+          >
             View All Projects
           </Button>
         </div>
       </div>
       
-      <style>{`
-        .section-header::after {
-          content: '';
-          display: block;
-          width: 50px;
-          height: 3px;
-          background-color: #3B82F6;
-          margin-top: 8px;
-          margin-left: auto;
-          margin-right: auto;
-        }
-        .project-card:hover .project-overlay {
-          opacity: 1;
-        }
-        @media (prefers-color-scheme: dark) {
+      <style>
+        {`
           .section-header::after {
-            background-color: #60A5FA;
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(to right, #EC4899, #8B5CF6);
+            margin-top: 8px;
+            margin-left: auto;
+            margin-right: auto;
           }
-        }
-      `}</style>
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          .project-card:hover .project-overlay {
+            opacity: 1;
+          }
+          @media (prefers-color-scheme: dark) {
+            .section-header::after {
+              background: linear-gradient(to right, #EC4899, #8B5CF6);
+            }
+          }
+        `}
+      </style>
     </section>
   );
 }
