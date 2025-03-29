@@ -170,17 +170,14 @@ export default function HeroSection() {
               </Button>
             </div>
             <SocialLinks>
-              <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer">
+              <a href="https://github.com/MORKMongkul" target="_blank" rel="noopener noreferrer">
                 <i className="fab fa-github"></i>
               </a>
-              <a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.linkedin.com/in/mork-mongkul-2b622620b/" target="_blank" rel="noopener noreferrer">
                 <i className="fab fa-linkedin"></i>
               </a>
-              <a href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer">
-                <i className="fab fa-twitter"></i>
-              </a>
-              <a href="https://instagram.com/yourusername" target="_blank" rel="noopener noreferrer">
-                <i className="fab fa-instagram"></i>
+              <a href="https://t.me/morkmongkul" target="_blank" rel="noopener noreferrer">
+                <i className="fab fa-telegram"></i>
               </a>
             </SocialLinks>
           </div>
