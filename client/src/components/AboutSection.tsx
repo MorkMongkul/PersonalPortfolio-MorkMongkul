@@ -65,10 +65,10 @@ export default function AboutSection() {
   const sectionRef = useRef(null);
 
   const skills = [
-    { name: "Graphic Design", icon: "paint-brush", description: "Creative designs for branding, marketing, and motion.", proficiency: 90 },
-    { name: "Math Education", icon: "chalkboard-teacher", description: "Teaching complex mathematical concepts in simple ways.", proficiency: 85 },
-    { name: "Data Science", icon: "chart-line", description: "Analyzing data to provide actionable insights using Python and ML.", proficiency: 75 },
-    { name: "Web Development", icon: "laptop-code", description: "Building intuitive and responsive websites with modern tools.", proficiency: 80 },
+    { name: "Data Science", icon: "chart-line", description: "Analyzing, Visualizing, and Modeling data to provide actionable insights using Python,Power BI, and Machine Learning tools.", proficiency: 80 },
+    { name: "Mathematics Educator", icon: "chalkboard-teacher", description: "Teaching mathematical concepts to high school students in simple ways with providing high quality class materials.", proficiency: 85 },
+    { name: "Graphic Design", icon: "paint-brush", description: "Creative designs for branding, marketing, and visuals.", proficiency: 90 },
+    { name: "Web Development", icon: "laptop-code", description: "Building intuitive and responsive websites with modern tools.", proficiency: 70 },
   ];
 
   useEffect(() => {
@@ -127,7 +127,7 @@ export default function AboutSection() {
           >
             <p className="text-gray-700 mb-6 leading-relaxed dark:text-gray-300">
               I am a <span className="text-[#EC4899] font-medium dark:text-pink-400">Senior Graphic Designer</span> with nearly five years of experience,
-              specializing in branding, marketing visuals, and motion design. Proficient in Adobe Photoshop, Illustrator, Premiere Pro, and Cinema 4D.
+              specializing in branding, marketing,visuals design. Proficient in Adobe Photoshop, Illustrator, Premiere Pro and After Effects.
             </p>
             <p className="text-gray-700 mb-6 leading-relaxed dark:text-gray-300">
               Beyond design, I am pursuing a degree in <span className="text-[#10B981] font-medium dark:text-green-400">Data Science and Engineering</span>,
@@ -135,8 +135,8 @@ export default function AboutSection() {
               me to craft impactful and strategic designs. Passionate about teaching and inspiring future designers.
             </p>
             <a
-              href="/cv_update_v2025.pdf"
-              download="cv_update_v2025.pdf"
+              href="/mork_mongkul_me.pdf"
+              download="mork_mongkul_me.pdf"
               className="mt-4 inline-block px-6 py-3 text-lg font-medium text-white bg-gradient-to-r from-pink-500 to-cyan-500 rounded-lg shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:from-pink-600 hover:to-cyan-600"
             >
               Download CV

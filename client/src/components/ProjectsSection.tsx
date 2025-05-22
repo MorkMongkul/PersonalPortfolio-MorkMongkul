@@ -1,29 +1,35 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { projects as fallbackProjects } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import type { Project } from "@shared/schema";
+import clsx from 'clsx';
+import { AnimatePresence, motion } from 'framer-motion';
 
 type FilterType = "all" | "design" | "education" | "data";
 type DesignSubcategory = "branding" | "print" | "social";
+type DataScienceSubcategory = "machine_learning" | "database" | "data_viz";
 
 interface ProjectType {
   id: number;
   title: string;
   description: string;
   category: string;
-  subcategory?: DesignSubcategory;
+  subcategory?: DesignSubcategory | DataScienceSubcategory;
   image: string;
+  thumbnailImage?: string;
   link: string;
+  featured?: boolean;
 }
 
 export default function ProjectsSection() {
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
+  const [modalProject, setModalProject] = useState<ProjectType | null>(null);
 
   // Filter projects based on active filter
   const displayProjects = activeFilter === 'all'
-    ? fallbackProjects
+    ? fallbackProjects.filter(project => project.featured)
     : fallbackProjects.filter(project => project.category === activeFilter);
 
   // Group design projects by subcategory
@@ -38,7 +44,20 @@ export default function ProjectsSection() {
     return acc;
   }, {} as Record<DesignSubcategory, ProjectType[]>);
 
+  // Group data science projects by subcategory
+  const groupedDataProjects = displayProjects.reduce((acc, project) => {
+    if (project.category === 'data' && project.subcategory) {
+      const subcategory = project.subcategory as DataScienceSubcategory;
+      if (!acc[subcategory]) {
+        acc[subcategory] = [];
+      }
+      acc[subcategory].push(project as ProjectType);
+    }
+    return acc;
+  }, {} as Record<DataScienceSubcategory, ProjectType[]>);
+
   const handleFilterChange = (filter: FilterType) => {
+    if (filter === activeFilter) return; // Prevent unnecessary re-render
     setActiveFilter(filter);
   };
 
@@ -57,7 +76,20 @@ export default function ProjectsSection() {
         </div>
       ));
     }
-
+    if (activeFilter === 'data') {
+      return Object.entries(groupedDataProjects).map(([subcategory, projects]) => (
+        <div key={subcategory} className="col-span-full">
+          <h3 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white capitalize">
+            {subcategory === 'machine_learning' ? 'Machine Learning' :
+             subcategory === 'database' ? 'Database' :
+             'Data Visualization'}
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {projects.map((project) => renderProjectCard(project))}
+          </div>
+        </div>
+      ));
+    }
     return displayProjects.map((project) => renderProjectCard(project as ProjectType));
   };
 
@@ -65,19 +97,24 @@ export default function ProjectsSection() {
     <div 
       className="project-card group" 
       key={project.id}
+      data-project-id={project.id}
       style={{ 
         opacity: 0,
         animation: 'fadeIn 0.6s ease-out forwards',
         animationDelay: `${project.id * 0.1}s`
       }}
+      onClick={() => project.category === 'design' ? setModalProject(project) : undefined}
     >
       <div className="relative overflow-hidden rounded-xl shadow-lg transition-all duration-500 hover:shadow-2xl dark:shadow-gray-800/30">
         <div className="relative h-72">
+          {/* Simple image display */}
           <img 
             src={project.image}
-            alt={project.title} 
+            alt={project.title}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            loading="lazy"
           />
+
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
             <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-6 group-hover:translate-y-0 transition-transform duration-500">
               <span className={`inline-block px-3 py-1 text-sm font-medium rounded-full mb-3 ${
@@ -97,24 +134,58 @@ export default function ProjectsSection() {
               <p className="text-gray-200 text-sm mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
                 {project.description}
               </p>
-              <a 
-                href={project.link}
-                className={`inline-flex items-center text-sm font-medium ${
-                  project.category === "design" 
-                    ? "text-[#EC4899] hover:text-[#EC4899]/80" 
-                    : project.category === "education" 
-                      ? "text-[#10B981] hover:text-[#10B981]/80" 
-                      : "text-primary hover:text-primary/80"
-                } transition-colors`}
-              >
-                View Project
-                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </a>
+              {project.category === 'data' ? (
+                <a 
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                >
+                  View on GitHub
+                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </a>
+              ) : (
+                <a 
+                  href={project.link}
+                  className={`inline-flex items-center text-sm font-medium ${
+                    project.category === "design" 
+                      ? "text-[#EC4899] hover:text-[#EC4899]/80" 
+                      : project.category === "education" 
+                        ? "text-[#10B981] hover:text-[#10B981]/80" 
+                        : "text-primary hover:text-primary/80"
+                  } transition-colors`}
+                >
+                  View Project
+                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </a>
+              )}
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  );
+
+  // Modal for Design Project Full View
+  const renderModal = () => modalProject && (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={() => setModalProject(null)}>
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg max-w-lg w-full p-8 relative" onClick={e => e.stopPropagation()}>
+        <button className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 dark:hover:text-white" onClick={() => setModalProject(null)}>&times;</button>
+        
+        {/* Simple image display */}
+        <img 
+          src={modalProject.image} 
+          alt={modalProject.title} 
+          className="w-full h-64 object-cover rounded mb-4"
+        />
+        
+        <h2 className="text-2xl font-bold mb-2">{modalProject.title}</h2>
+        <p className="mb-4 text-gray-700 dark:text-gray-300">{modalProject.description}</p>
+        <a href={modalProject.link} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">View Project</a>
       </div>
     </div>
   );
@@ -193,6 +264,7 @@ export default function ProjectsSection() {
           </Button>
         </div>
       </div>
+      {renderModal()}
       
       <style>
         {`

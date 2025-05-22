@@ -1,23 +1,37 @@
+import { features } from "process";
+import { IconType } from "react-icons";
+
+// Define type for skills with optional icon
+export interface Skill {
+  name: string;
+  percentage: number;
+  icon?: IconType;
+}
+
 // Skills data
-export const designSkills = [
+export const designSkills: Skill[] = [
   { name: "Adobe Photoshop", percentage: 95 },
   { name: "Adobe Illustrator", percentage: 90 },
-  { name: "UI/UX Design", percentage: 85 },
+  { name: "Adobe Premier", percentage: 85 },
+  { name: "Adobe After Effects", percentage: 85 },
   { name: "Figma", percentage: 80 },
 ];
 
-export const mathSkills = [
+export const mathSkills: Skill[] = [
   { name: "Calculus", percentage: 95 },
   { name: "Linear Algebra", percentage: 90 },
   { name: "Statistics", percentage: 85 },
-  { name: "Curriculum Development", percentage: 90 },
+  { name: "Class Materials Design", percentage: 90 },
 ];
 
-export const dataSkills = [
+export const dataSkills: Skill[] = [
   { name: "Python", percentage: 90 },
   { name: "Machine Learning", percentage: 85 },
   { name: "Data Visualization", percentage: 90 },
   { name: "SQL", percentage: 80 },
+  { name: "MySQL", percentage: 80 },
+  { name: "PostgreSQL", percentage: 80 },
+  { name: "Power BI", percentage: 85 },
 ];
 
 // Projects data
@@ -29,21 +43,24 @@ export const projects = [
     category: "design",
     subcategory: "branding",
     image: "/optimized-graphics/portfolio-cover [Recovered]-04.webp",
+    thumbnailImage: "/optimized-graphics/thumb-portfolio-cover [Recovered]-04.webp",
     link: "#",
+    featured: true,
   },
   {
     id: 2,
-    title: "Editorial Design",
-    description: "Magazine layouts and editorial designs with modern typography and visual hierarchy.",
+    title: "Branding Identity & Logo Design",
+    description: "Logo branding design for client from Home Sweet Home Furniture.",
     category: "design",
     subcategory: "branding",
     image: "/optimized-graphics/portfolio-cover [Recovered]-05.webp",
+    thumbnailImage: "/optimized-graphics/thumb-portfolio-cover [Recovered]-05.webp",
     link: "#",
   },
   {
     id: 3,
-    title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    title: "Logo Variation",
+    description: "The logo variation, showing various types of logos on different branding color.",
     category: "design",
     subcategory: "branding",
     image: "/optimized-graphics/portfolio-cover [Recovered]-06.webp",
@@ -51,8 +68,8 @@ export const projects = [
   },
   {
     id: 4,
-    title: "Packaging Design",
-    description: "Product packaging designs that combine aesthetics with practical functionality.",
+    title: "Logo MockUp",
+    description: "Logo mock up on different types of materials and evironment of the products and use cases.",
     category: "design",
     subcategory: "branding",
     image: "/optimized-graphics/portfolio-cover [Recovered]-08.webp",
@@ -60,8 +77,8 @@ export const projects = [
   },
   {
     id: 5,
-    title: "Motion Graphics",
-    description: "Dynamic motion graphics and animations for digital platforms.",
+    title: "Business Card",
+    description: "Business card, letter head of company showing the premium and use cases.",
     category: "design",
     subcategory: "branding",
     image: "/optimized-graphics/portfolio-cover [Recovered]-09.webp",
@@ -69,8 +86,8 @@ export const projects = [
   },
   {
     id: 6,
-    title: "UI/UX Design",
-    description: "User interface and experience design for web and mobile applications.",
+    title: "T-shirt Mockup",
+    description: "Showing a logo of company can be use on a real items that show a unique brand of the company.",
     category: "design",
     subcategory: "branding",
     image: "/optimized-graphics/portfolio-cover [Recovered]-10.webp",
@@ -78,8 +95,8 @@ export const projects = [
   },
   {
     id: 7,
-    title: "Data Visualization Design",
-    description: "Interactive dashboard designs for analyzing and presenting complex data patterns.",
+    title: "Company Website",
+    description: "The use of logo on various digital of company website and online.",
     category: "design",
     subcategory: "branding",
     image: "/optimized-graphics/portfolio-cover [Recovered]-11.webp",
@@ -87,8 +104,8 @@ export const projects = [
   },
   {
     id: 8,
-    title: "Educational Design Materials",
-    description: "Visually engaging educational materials and interactive learning resources.",
+    title: "logo Welcome 3D",
+    description: "showing the real use case of logo as 3D logo on the wall.",
     category: "design",
     subcategory: "branding",
     image: "/optimized-graphics/portfolio-cover [Recovered]-12.webp",
@@ -96,8 +113,8 @@ export const projects = [
   },
   {
     id: 9,
-    title: "Print Design",
-    description: "Professional print materials including brochures, posters, and marketing collateral.",
+    title: "Print Ads",
+    description: "The use of logo on advertisment and ads.",
     category: "design",
     subcategory: "branding",
     image: "/optimized-graphics/portfolio-cover [Recovered]-13.webp",
@@ -105,8 +122,8 @@ export const projects = [
   },
   {
     id: 10,
-    title: "Digital Illustration",
-    description: "Custom digital illustrations and artwork for various applications.",
+    title: "Branding Identity & Logo Design",
+    description: "This how a branding design are made with creativity, profficiency, that will able to bring the presense of the brand to the audience.",
     category: "design",
     subcategory: "branding",
     image: "/optimized-graphics/portfolio-cover [Recovered]-14.webp",
@@ -114,8 +131,8 @@ export const projects = [
   },
   {
     id: 11,
-    title: "Analytics Dashboard Design",
-    description: "User-friendly interface design for data analytics and visualization tools.",
+    title: "3D welcome Logo",
+    description: "Logo mock up of the wall of the company, showing a premium and unique",
     category: "design",
     subcategory: "branding",
     image: "/optimized-graphics/portfolio-cover [Recovered]-15.webp",
@@ -123,8 +140,8 @@ export const projects = [
   },
   {
     id: 12,
-    title: "Interactive Learning Design",
-    description: "Engaging visual design for digital educational resources and learning platforms.",
+    title: "Various packaging Design",
+    description: "The use cases of logo on various packaging products.",
     category: "design",
     subcategory: "branding",
     image: "/optimized-graphics/portfolio-cover [Recovered]-18.webp",
@@ -132,8 +149,8 @@ export const projects = [
   },
   {
     id: 13,
-    title: "Restaurant Menu Design",
-    description: "Modern and elegant menu designs for upscale restaurants, featuring custom typography and food photography.",
+    title: "Packaging Design",
+    description: "Packaging design products of the company, showing how the logo was design and showing unique and identity of the brand.",
     category: "design",
     subcategory: "branding",
     image: "/optimized-graphics/portfolio-cover [Recovered]-19.webp",
@@ -141,8 +158,8 @@ export const projects = [
   },
   {
     id: 14,
-    title: "Instagram Story Templates",
-    description: "Customizable social media templates for fashion and lifestyle brands, optimized for Instagram Stories.",
+    title: "Premium Business Card",
+    description: "A minimals premium business card.",
     category: "design",
     subcategory: "branding",
     image: "/optimized-graphics/portfolio-cover [Recovered]-20.webp",
@@ -150,8 +167,8 @@ export const projects = [
   },
   {
     id: 15,
-    title: "Corporate Stationery Design",
-    description: "Complete branding package including business cards, letterheads, and envelopes for corporate clients.",
+    title: "Billboard Ads",
+    description: "Billboard advertisment, showing the glow of logo, easy to memorize.",
     category: "design",
     subcategory: "branding",
     image: "/optimized-graphics/portfolio-cover [Recovered]-21.webp",
@@ -159,8 +176,8 @@ export const projects = [
   },
   {
     id: 16,
-    title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    title: "Blend Coffee Branding Identity ",
+    description: "Branding design that inspire from the blend of the brands with its own products.",
     category: "design",
     subcategory: "branding",
     image: "/optimized-graphics/portfolio-cover [Recovered]-22.webp",
@@ -168,8 +185,8 @@ export const projects = [
   },
   {
     id: 17,
-    title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    title: "Branding Items",
+    description: "Showing the use cases of logo on various design and environemnt.",
     category: "design",
     subcategory: "branding",
     image: "/optimized-graphics/portfolio-cover [Recovered]-23.webp",
@@ -177,8 +194,8 @@ export const projects = [
   },
   {
     id: 18,
-    title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    title: "Branding Items",
+    description: "The use of logo on various type of products of the company.",
     category: "design",
     subcategory: "branding",
     image: "/optimized-graphics/portfolio-cover [Recovered]-24.webp",
@@ -186,8 +203,8 @@ export const projects = [
   },
   {
     id: 19,
-    title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    title: "ID card Design",
+    description: "A clean,minimal ID card showing the unique and premium of the Company.",
     category: "design",
     subcategory: "branding",
     image: "/optimized-graphics/portfolio-cover [Recovered]-25.webp",
@@ -195,8 +212,8 @@ export const projects = [
   },
   {
     id: 20,
-    title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    title: "Cup Design",
+    description: "Showing the real use of logo on the main product of the company.",
     category: "design",
     subcategory: "branding",
     image: "/optimized-graphics/portfolio-cover [Recovered]-26.webp",
@@ -205,7 +222,7 @@ export const projects = [
   {
     id: 21,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "Clean menu design for restuarant.",
     category: "design",
     subcategory: "print",
     image: "/optimized-graphics/portfolio-cover [Recovered]-28.webp",
@@ -214,7 +231,7 @@ export const projects = [
   {
     id: 22,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "A clean minimal menu of restuarant.",
     category: "design",
     subcategory: "print",
     image: "/optimized-graphics/portfolio-cover [Recovered]-29.webp",
@@ -223,7 +240,7 @@ export const projects = [
   {
     id: 23,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "A natural looks of X-stand for a coffee shop.",
     category: "design",
     subcategory: "print",
     image: "/optimized-graphics/portfolio-cover [Recovered]-30.webp",
@@ -232,7 +249,7 @@ export const projects = [
   {
     id: 24,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "An actual print X-stand ads for promoting new coffee menu.",
     category: "design",
     subcategory: "print",
     image: "/optimized-graphics/portfolio-cover [Recovered]-31.webp",
@@ -241,7 +258,7 @@ export const projects = [
   {
     id: 25,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "A big advertising banner for furniture compnany.",
     category: "design",
     subcategory: "print",
     image: "/optimized-graphics/portfolio-cover [Recovered]-32.webp",
@@ -250,7 +267,7 @@ export const projects = [
   {
     id: 26,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "A beautiful billboard advertising for Skin scare company.",
     category: "design",
     subcategory: "print",
     image: "/optimized-graphics/portfolio-cover [Recovered]-33.webp",
@@ -259,7 +276,7 @@ export const projects = [
   {
     id: 29,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "A collections of social media ads from various type of company.",
     category: "design",
     subcategory: "Social Media",
     image: "/optimized-graphics/portfolio-cover [Recovered]-35.webp",
@@ -268,7 +285,7 @@ export const projects = [
   {
     id: 30,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "A dark glowing poster burger promotion poster.",
     category: "design",
     subcategory: "Social Media",
     image: "/optimized-graphics/portfolio-cover [Recovered]-36.webp",
@@ -277,7 +294,7 @@ export const projects = [
   {
     id:31,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "A hot glowing pizza poster for domino pizza.",
     category: "design",
     subcategory: "Social Media",
     image: "/optimized-graphics/portfolio-cover [Recovered]-37.webp",
@@ -286,7 +303,7 @@ export const projects = [
   {
     id: 32,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "New drink poster advertising poster.",
     category: "design",
     subcategory: "Social Media",
     image: "/optimized-graphics/portfolio-cover [Recovered]-38.webp",
@@ -295,7 +312,7 @@ export const projects = [
   {
     id: 33,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "A promotion poster desing for KFC.",
     category: "design",
     subcategory: "Social Media",
     image: "/optimized-graphics/portfolio-cover [Recovered]-39.webp",
@@ -304,7 +321,7 @@ export const projects = [
   {
     id: 34,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "A creative manipulation poster social media ads for delivery company .",
     category: "design",
     subcategory: "Social Media",
     image: "/optimized-graphics/portfolio-cover [Recovered]-40.webp",
@@ -313,7 +330,7 @@ export const projects = [
   {
     id: 35,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "A collection of drinking design poster ads.",
     category: "design",
     subcategory: "Social Media",
     image: "/optimized-graphics/portfolio-cover [Recovered]-41.webp",
@@ -322,7 +339,7 @@ export const projects = [
   {
     id: 36,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "A simple, clean poster for daily post ads.",
     category: "design",
     subcategory: "Social Media",
     image: "/optimized-graphics/portfolio-cover [Recovered]-42.webp",
@@ -331,7 +348,7 @@ export const projects = [
   {
     id: 37,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "A complete yellow poster, showing the brand of company and unique.",
     category: "design",
     subcategory: "Social Media",
     image: "/optimized-graphics/portfolio-cover [Recovered]-43.webp",
@@ -340,7 +357,7 @@ export const projects = [
   {
     id: 38,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "A collection creative poster design .",
     category: "design",
     subcategory: "Social Media",
     image: "/optimized-graphics/portfolio-cover [Recovered]-44.webp",
@@ -367,7 +384,7 @@ export const projects = [
   {
     id: 41,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "A collection poster of national events in Cambodia.",
     category: "design",
     subcategory: "Social Media",
     image: "/optimized-graphics/portfolio-cover [Recovered]-47.webp",
@@ -376,7 +393,7 @@ export const projects = [
   {
     id: 42,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "Pchum Ben poster design for Pchum Ben opening days.",
     category: "design",
     subcategory: "Social Media",
     image: "/optimized-graphics/portfolio-cover [Recovered]-48.webp",
@@ -385,7 +402,7 @@ export const projects = [
   {
     id: 43,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "A poster of Pchum Ben first day.",
     category: "design",
     subcategory: "Social Media",
     image: "/optimized-graphics/portfolio-cover [Recovered]-49.webp",
@@ -394,7 +411,7 @@ export const projects = [
   {
     id: 44,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "A collection of promotion poster from auto parts company.",
     category: "design",
     subcategory: "Social Media",
     image: "/optimized-graphics/portfolio-cover [Recovered]-50.webp",
@@ -403,7 +420,7 @@ export const projects = [
   {
     id: 45,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "A collection of special events poster.",
     category: "design",
     subcategory: "Social Media",
     image: "/optimized-graphics/portfolio-cover [Recovered]-51.webp",
@@ -412,11 +429,64 @@ export const projects = [
   {
     id: 46,
     title: "Social Media Design",
-    description: "Engaging social media content and campaign designs for digital marketing.",
+    description: "A creative poster for Constitution Day of Cambodia.",
     category: "design",
     subcategory: "Social Media",
     image: "/optimized-graphics/portfolio-cover [Recovered]-52.webp",
     link: "#",
+  },
+  {
+    id: 101,
+    title: "Titanic Survival Prediction",
+    description: "Machine learning model to predict survival on the Titanic using passenger data.",
+    category: "data",
+    subcategory: "machine_learning",
+    image: "/optimized-graphics/Titanic_survival_prediction.webp",
+    thumbnailImage: "/optimized-graphics/thumb-Titanic_survival_prediction.webp",
+    link: "https://github.com/yourusername/titanic-survival-prediction",
+    featured: true,
+  },
+  {
+    id: 102,
+    title: "Sentiment Analysis",
+    description: "Natural language processing model for analyzing sentiment in text data.",
+    category: "data",
+    subcategory: "machine_learning",
+    image: "/optimized-graphics/sentiment_analysis.webp",
+    thumbnailImage: "/optimized-graphics/thumb-sentiment_analysis.webp",
+    link: "https://github.com/yourusername/transformer-nlp",
+    featured: true,
+  },
+  {
+    id: 103,
+    title: "Customer Churn Prediction",
+    description: "Predictive analytics model to identify customers at risk of churning based on behavior patterns.",
+    category: "data",
+    subcategory: "machine_learning",
+    image: "/optimized-graphics/customer_churn.webp",
+    thumbnailImage: "/optimized-graphics/thumb-customer_churn.webp",
+    link: "https://github.com/yourusername/customer-churn-prediction",
+    featured: true,
+  },
+  {
+    id: 110,
+    title: "SAP Analytics Dashboard",
+    description: "Interactive dashboards and data visualization using SAP Analytic Cloud.",
+    category: "data",
+    subcategory: "data_viz",
+    image: "/optimized-graphics/thumb-Sap_analytic.webp",
+    link: "https://aseandse.ap11.hcs.cloud.sap/sap/fpa/ui/tenants/2bd89/bo/story/BF60C802192D64C5A34C29D8B9FF3D7C",
+    featured: true,
+  },
+  {
+    id: 120,
+    title: "Bike Rental System Design",
+    description: "Designed a bike rental database with ER diagrams, SQL schema, sample data, and queries to manage rentals and customers.",
+    category: "data",
+    subcategory: "database",
+    image: "/optimized-graphics/thumb-bike_rental_sys.webp",
+    link: "https://github.com/MorkMongkul/Data-Science-Projects/tree/main/Bike_Rental_System_db",
+    featured: false,
   },
 ];
 
@@ -429,7 +499,6 @@ export const contactInfo = {
   linkedin: "https://www.linkedin.com/in/mork-mongkul-2b622620b/", 
   github: "https://github.com/MORKMongkul ", 
 }
-
 
 // Social links
 export const socialLinks = [

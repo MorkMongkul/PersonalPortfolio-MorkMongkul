@@ -1,25 +1,30 @@
 import React from "react";
 import { useEffect, useRef } from "react";
-import { designSkills, mathSkills, dataSkills } from "@/lib/constants";
+import { designSkills, mathSkills, dataSkills, Skill } from "@/lib/constants";
 import { MdOutlineDesignServices } from "react-icons/md";
 import { TbMathFunction } from "react-icons/tb";
 import { GoDatabase } from "react-icons/go";
 import { SiDatadog, SiPython, SiJavascript, SiReact, SiFigma, SiAdobephotoshop, 
          SiAdobeillustrator, SiTensorflow, SiScikitlearn, SiTableau, SiMysql, 
          SiPostgresql, SiMongodb, SiGithub, SiTypescript, SiNextdotjs, SiTailwindcss,
-         SiNodedotjs, SiExpress, SiPrisma, SiRedux, SiFirebase } from "react-icons/si";
-import { FaRProject, FaBrain, FaServer } from "react-icons/fa";
+         SiNodedotjs, SiExpress, SiPrisma, SiRedux, SiFirebase, SiSupabase, SiFlask,
+         SiHtml5, SiCss3, SiAdobepremierepro, SiAdobeaftereffects } from "react-icons/si";
+import { FaRProject, FaBrain, FaServer, FaChartBar } from "react-icons/fa";
+import { IconType } from "react-icons";
 
-const webDevSkills = [
+const webDevSkills: Skill[] = [
   { name: "React.js", percentage: 90, icon: SiReact },
   { name: "Next.js", percentage: 85, icon: SiNextdotjs },
   { name: "TypeScript", percentage: 85, icon: SiTypescript },
   { name: "Node.js", percentage: 80, icon: SiNodedotjs },
+  { name: "Flask", percentage: 80, icon: SiFlask },
   { name: "Express.js", percentage: 80, icon: SiExpress },
-  { name: "Prisma", percentage: 75, icon: SiPrisma },
+  { name: "supabase", percentage: 75, icon: SiSupabase },
   { name: "Redux", percentage: 85, icon: SiRedux },
   { name: "Tailwind CSS", percentage: 90, icon: SiTailwindcss },
-  { name: "Firebase", percentage: 80, icon: SiFirebase },
+  { name: "MySQL", percentage: 80, icon: SiMysql },
+  { name: "PostgreSQL", percentage: 80, icon: SiPostgresql },
+  { name: "MongoDB", percentage: 80, icon: SiMongodb },
 ];
 
 const floatingIcons = [
@@ -32,53 +37,63 @@ const floatingIcons = [
   { Icon: SiTensorflow, size: 35, color: '#FF6F00', name: 'TensorFlow' },
   { Icon: SiScikitlearn, size: 35, color: '#F7931E', name: 'Scikit-learn' },
   { Icon: SiTableau, size: 30, color: '#E97627', name: 'Tableau' },
+  { Icon: FaChartBar, size: 30, color: '#F2C811', name: 'Power BI' },
   { Icon: SiMysql, size: 35, color: '#4479A1', name: 'MySQL' },
   { Icon: SiPostgresql, size: 35, color: '#4169E1', name: 'PostgreSQL' },
   { Icon: SiMongodb, size: 35, color: '#47A248', name: 'MongoDB' },
   { Icon: FaRProject, size: 30, color: '#276DC3', name: 'R' },
   { Icon: FaBrain, size: 35, color: '#FF5252', name: 'Machine Learning' },
   { Icon: SiGithub, size: 40, color: '#181717', name: 'GitHub' },
+  { Icon: SiFlask, size: 35, color: '#000000', name: 'Flask' },
+  { Icon: SiSupabase, size: 35, color: '#3776AB', name: 'Supabase' },
+  { Icon: SiHtml5, size: 35, color: '#E97627', name: 'HTML' },
+  { Icon: SiCss3, size: 35, color: '#276DC3', name: 'CSS' },
 ];
 
 const skillCategories = [
   {
-    title: "Full Stack Development",
+    title: "Web Development",
     icon: <FaServer />,
     color: "#6366F1",
-    description: "Building modern web applications with cutting-edge technologies",
+    description: "Building modern web applications with cutting-edge technologies, and creating responsive and intuitive user interfaces.",
     skills: webDevSkills
   },
   {
     title: "Graphic Design",
     icon: <MdOutlineDesignServices />,
     color: "#EC4899",
-    description: "Creating visually appealing designs and user interfaces",
+    description: "Creating visually appealing designs, branding, for marketing and printing,and user interfaces",
     skills: designSkills.map(skill => ({
       ...skill,
       icon: skill.name === "Adobe Photoshop" ? SiAdobephotoshop :
             skill.name === "Adobe Illustrator" ? SiAdobeillustrator :
+            skill.name === "Adobe Premier" ? SiAdobepremierepro :
+            skill.name === "Adobe After Effects" ? SiAdobeaftereffects :
             skill.name === "Figma" ? SiFigma : MdOutlineDesignServices
     }))
   },
   {
-    title: "Math Education",
+    title: "Mathematics Educator",
     icon: <TbMathFunction />,
     color: "#10B981",
-    description: "Teaching advanced mathematics and developing educational content",
+    description: "Teaching high school mathematics and developing educational content and materials.",
     skills: mathSkills
   },
   {
     title: "Data Science",
     icon: <GoDatabase />,
     color: "#3B82F6",
-    description: "Analyzing data and building machine learning models",
+    description: "Analyzing data, creating visualization,Dashboards,and building machine learning models for providing actionable insights of complex data across various industries and business d.",
     skills: dataSkills.map(skill => ({
       ...skill,
       icon: skill.name === "Python" ? SiPython :
             skill.name === "R" ? FaRProject :
             skill.name === "Machine Learning" ? FaBrain :
             skill.name === "TensorFlow" ? SiTensorflow :
-            skill.name === "Scikit-learn" ? SiScikitlearn : GoDatabase
+            skill.name === "Scikit-learn" ? SiScikitlearn :
+            skill.name === "MySQL" ? SiMysql :
+            skill.name === "PostgreSQL" ? SiPostgresql :
+            skill.name === "Power BI" ? FaChartBar : GoDatabase
     }))
   }
 ];
@@ -175,7 +190,7 @@ function FloatingIcon({ Icon, color, size, name, delay }: {
 }
 
 function HexagonSkill({ skill, color, index }: { 
-  skill: { name: string; percentage: number; icon?: React.ElementType }; 
+  skill: Skill; 
   color: string;
   index: number;
 }) {
@@ -252,7 +267,7 @@ export default function SkillsSection() {
           ))}
         </div>
 
-        <div className="flex flex-wrap justify-center items-center gap-6 py-8 bg-white/10 dark:bg-gray-800/30 backdrop-blur-sm rounded-xl">
+        <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6 py-8 bg-white/10 dark:bg-gray-800/30 backdrop-blur-sm rounded-xl">
           {floatingIcons.map((icon, index) => (
             <FloatingIcon
               key={index}
@@ -341,6 +356,22 @@ export default function SkillsSection() {
           
           .hexagon-inner span {
             font-size: 0.7rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .hexagon-grid {
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 0.5rem;
+          }
+          
+          .hexagon-item {
+            width: 70px;
+            height: 80.83px;
+          }
+          
+          .hexagon-inner span {
+            font-size: 0.65rem;
           }
         }
 

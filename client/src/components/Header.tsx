@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import ThemeToggle from "./ThemeToggle";
+import { HiMenuAlt3 } from "react-icons/hi";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -33,7 +34,9 @@ export default function Header() {
   const navItems = [
     { id: "home", label: "Home" },
     { id: "about", label: "About" },
+    { id: "education", label: "Education" },
     { id: "skills", label: "Skills" },
+    { id: "certifications", label: "Certifications" },
     { id: "projects", label: "Projects" },
     { id: "contact", label: "Contact" },
   ];
@@ -88,7 +91,7 @@ export default function Header() {
               className="ml-2 text-gray-500 dark:text-gray-300 focus:outline-none"
               onClick={toggleMobileMenu}
             >
-              <i className="fas fa-bars text-xl"></i>
+              <HiMenuAlt3 className="text-xl" />
             </button>
           </div>
         </div>

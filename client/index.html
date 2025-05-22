@@ -5,17 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mork Mongkul | Portfolio</title>
     <meta name="description" content="Mork Mongkul's portfolio showcasing graphic design, math education, and data science expertise" />
+    <meta name="theme-color" content="#000000" />
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/src/main.tsx" as="script" type="module" />
+    
+    <!-- Font preloading for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <!-- Font Awesome -->
+    
+    <!-- Font Awesome - replaced by react-icons but needed for some components -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    
+    <!-- Critical CSS for faster first paint -->
+    <style>
+      /* Prevent content from jumping when scrollbar appears */
+      html {
+        scrollbar-gutter: stable;
+      }
+      /* Simple loading spinner */
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top-color: #3498db;
+        animation: spin 1s ease-in-out infinite;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      @keyframes spin {
+        to { transform: translate(-50%, -50%) rotate(360deg); }
+      }
+      /* Hide spinner when JS loads */
+      .js-loaded .loading-spinner {
+        display: none;
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Loading spinner until React renders -->
+      <div class="loading-spinner"></div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Mark as JS loaded once the page is interactive
+      document.addEventListener('DOMContentLoaded', function() {
+        document.body.classList.add('js-loaded');
+      });
+    </script>
   </body>
 </html>

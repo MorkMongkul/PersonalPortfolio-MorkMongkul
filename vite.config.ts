@@ -18,6 +18,18 @@ export default defineConfig({
   build: {
     outDir: path.resolve(__dirname, "dist/public"),
     emptyOutDir: true,
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          icons: ['react-icons'],
+          ui: ['@radix-ui/react-tabs', '@radix-ui/react-dropdown-menu', '@radix-ui/react-toast'],
+          animation: ['framer-motion'],
+          utils: ['clsx', 'class-variance-authority', 'tailwind-merge'],
+        },
+      },
+    },
   },
   server: {
     port: 3000,
