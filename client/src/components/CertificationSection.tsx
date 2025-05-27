@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { FaArrowRight, FaAward, FaCertificate, FaMedal } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaAward, FaCertificate, FaMedal, FaTimes } from "react-icons/fa";
 import styled from "@emotion/styled";
 import { keyframes } from "@emotion/react";
 
@@ -10,18 +10,6 @@ const shimmer = keyframes`
   }
   100% {
     background-position: 200% 0;
-  }
-`;
-
-const pulseEffect = keyframes`
-  0% {
-    box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 6px rgba(236, 72, 153, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(236, 72, 153, 0);
   }
 `;
 
@@ -41,48 +29,113 @@ const GradientLine = styled.div`
   border-radius: 2px;
 `;
 
-const CertificationCard = styled(motion.div)`
-  position: relative;
-  border-radius: 12px;
-  padding: 1rem 1.25rem;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease-in-out;
-  overflow: hidden;
-  
-  &:hover {
-    background: linear-gradient(135deg, rgba(236, 72, 153, 0.05), rgba(139, 92, 246, 0.05));
-    border-color: rgba(236, 72, 153, 0.2);
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+const fadeInAnimation = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  
-  &:hover .icon-wrapper {
-    animation: ${pulseEffect} 1.5s infinite;
-    background: linear-gradient(135deg, #EC4899, #8B5CF6);
-    color: white;
-  }
-  
-  &:hover .cert-text {
-    transform: translateX(8px);
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 `;
 
-const IconWrapper = styled.div`
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  background: rgba(236, 72, 153, 0.1);
-  color: #EC4899;
-  transition: all 0.3s ease-in-out;
+const AnimatedContainer = styled.div`
+  .fade-in {
+    animation: ${fadeInAnimation} 0.5s ease-out forwards;
+  }
 `;
+
+interface Certificate {
+  id: number;
+  name: string;
+  provider: string;
+  icon: React.ReactNode;
+  imagePath: string;
+  category: 'technical' | 'design' | 'business';
+  date: string;
+}
+
+const certificates: Certificate[] = [
+  {
+    id: 1,
+    name: "Data Scientist Nanodegree Program",
+    provider: "Udacity",
+    icon: <FaAward className="h-4 w-4" />,
+    imagePath: "/nano_degree.png",
+    category: 'technical',
+    date: '2024'
+  },
+  {
+    id: 2,
+    name: "SAP Analytics Training",
+    provider: "ASEAN Data Sciece Explorer",
+    icon: <FaCertificate className="h-4 w-4" />,
+    imagePath: "SAP_certificates.png",
+    category: 'technical',
+    date: '2025'
+  },
+  {
+    id: 3,
+    name: "Google Data Analytics Professional Certificate",
+    provider: "Coursera",
+    icon: <FaAward className="h-4 w-4" />,
+    imagePath: "/Coursera_Certificate.jpg",
+    category: 'technical',
+    date: '2024'
+  },
+  {
+    id: 4,
+    name: "Data Warehouse Concept Design and Data Integration",
+    provider: "Coursera",
+    icon: <FaCertificate className="h-4 w-4" />,
+    imagePath: "/certificate_data_warehouse.jpg",
+    category: 'technical',
+    date: '2025'
+  },
+  {
+    id: 5,
+    name: "Machine Learning",
+    provider: "Coursera",
+    icon: <FaCertificate className="h-4 w-4" />,
+    imagePath: "/Machine_Learning.png",
+    category: 'technical',
+    date: '2022'
+  },
+  {
+    id: 6,
+    name: "Database for Developers",
+    provider: "Coursera",
+    icon: <FaCertificate className="h-4 w-4" />,
+    imagePath: "/Oracle_Database_dev_gym.png",
+    category: 'technical',
+    date: '2025'
+  },
+  {
+    id: 7,
+    name: "Microsoft Power BI Data Analyst",
+    provider: "Coursera",
+    icon: <FaCertificate className="h-4 w-4" />,
+    imagePath: "/PowerBI_Certificate.png",
+    category: 'technical',
+    date: '2025'
+  },
+  {
+    id: 8,
+    name: "The Frontend Developer Career Path",
+    provider: "Coursera",
+    icon: <FaCertificate className="h-4 w-4" />,
+    imagePath: "/Scrimba_certificate.png",
+    category: 'technical',
+    date: '2025'
+  },
+
+  
+];
 
 const CertificationSection = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [selectedCert, setSelectedCert] = useState<Certificate | null>(null);
   const sectionRef = useRef(null);
   
   useEffect(() => {
@@ -100,125 +153,95 @@ const CertificationSection = () => {
     return () => observer.disconnect();
   }, []);
 
-  const certifications = [
-    {
-      name: "Data Scientist Nanodegree Program",
-      provider: "Udacity",
-      icon: <FaAward className="h-4 w-4" />
-    },
-    {
-      name: "Google Data Analytics",
-      provider: "Coursera",
-      icon: <FaCertificate className="h-4 w-4" />
-    },
-    {
-      name: "SQL and Relational Databases 101",
-      provider: "Conigtive",
-      icon: <FaAward className="h-4 w-4" />
-    },
-    {
-      name: "Microsoft Power BI Data Analyst",
-      provider: "Coursera",
-      icon: <FaCertificate className="h-4 w-4" />
-    },
-    {
-      name: "Data Warehouse Concepts, Design, and Data Integration",
-      provider: "Coursera",
-      icon: <FaAward className="h-4 w-4" />
-    },
-    {
-      name: "Machine Learning Specialization 2022",
-      provider: "Coursera",
-      icon: <FaMedal className="h-4 w-4" />
-    },
-    {
-      name: "UNESCO UNITWIN Data Science Camp",
-      provider: "UNECO UNITWIN and Handong Global University",
-      icon: <FaMedal className="h-4 w-4" />
-    },
-    {
-      name: "Career-Ready Web Developer",
-      provider: "FrontendMaster",
-      icon: <FaCertificate className="h-4 w-4" />
-    },
-    {
-      name: "The Frontend Developer Career Path",
-      provider: "Scrimba",
-      icon: <FaAward className="h-4 w-4" />
-    }
-  ];
+  const renderCertificateCard = (certificate: Certificate) => (
+    <motion.div
+      key={certificate.id}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
+      transition={{ duration: 0.5, delay: certificate.id * 0.1 }}
+      className="group cursor-pointer"
+      onClick={() => setSelectedCert(selectedCert?.id === certificate.id ? null : certificate)}
+    >
+      <div className="relative overflow-hidden rounded-xl bg-white dark:bg-gray-800 shadow-lg transition-all duration-500 hover:shadow-2xl dark:shadow-gray-800/30">
+        <div className="p-6">
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex items-start space-x-4">
+              <div className="w-10 h-10 rounded-lg bg-pink-500/10 flex items-center justify-center text-pink-500">
+                {certificate.icon}
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  {certificate.name}
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {certificate.provider}
+                </p>
+              </div>
+            </div>
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              {certificate.date}
+            </span>
+          </div>
+          
+          <AnimatePresence>
+            {selectedCert?.id === certificate.id && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="mt-4"
+              >
+                <div className="relative w-full h-[300px] rounded-lg overflow-hidden">
+                  <img
+                    src={certificate.imagePath}
+                    alt={`${certificate.name} Certificate`}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    </motion.div>
+  );
 
   return (
-    <section 
-      id="certifications" 
-      className="py-16 md:py-24 bg-white dark:bg-gray-900 relative overflow-hidden"
-      ref={sectionRef}
-    >
-      {/* Decorative elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-20 pointer-events-none">
-        <div className="absolute -top-40 -left-20 w-80 h-80 bg-pink-500/30 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 right-0 w-60 h-60 bg-purple-500/30 rounded-full blur-3xl"></div>
-      </div>
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
-          transition={{ duration: 0.6 }}
-          className="mb-12 text-center"
-        >
-          <GradientText className="text-3xl md:text-4xl font-bold mb-4">Certification & Extra</GradientText>
-          <GradientLine />
-          <p className="mt-6 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Professional certifications and additional qualifications that enhance my expertise and skills.
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-          {certifications.map((certification, index) => (
-            <CertificationCard
-              key={index}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ 
-                opacity: isVisible ? 1 : 0, 
-                x: isVisible ? 0 : -20 
-              }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-white dark:bg-gray-800/50 shadow-md"
-            >
-              <div className="flex items-start group">
-                <IconWrapper className="icon-wrapper mr-3 mt-1">
-                  {certification.icon}
-                </IconWrapper>
-                <div className="cert-text transition-transform duration-300">
-                  <h3 className="text-base font-bold text-gray-900 dark:text-white">
-                    {certification.name}
-                  </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {certification.provider}
-                  </p>
-                </div>
-              </div>
-            </CertificationCard>
-          ))}
+    <AnimatedContainer>
+      <section 
+        id="certifications" 
+        className="py-16 md:py-24 bg-white dark:bg-gray-900 relative overflow-hidden"
+        ref={sectionRef}
+      >
+        {/* Decorative elements */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-20 pointer-events-none">
+          <div className="absolute -top-40 -left-20 w-80 h-80 bg-pink-500/30 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/2 right-0 w-60 h-60 bg-purple-500/30 rounded-full blur-3xl"></div>
         </div>
         
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-12 text-center"
-        >
-          <a 
-            href="#" 
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-3 rounded-full font-medium hover:from-pink-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl"
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
+            transition={{ duration: 0.6 }}
+            className="mb-12 text-center"
           >
-            View All Certificates
-            <FaArrowRight className="h-3 w-3" />
-          </a>
-        </motion.div>
-      </div>
-    </section>
+            <GradientText className="text-3xl md:text-4xl font-bold mb-4">
+              Certifications & Achievements
+            </GradientText>
+            <GradientLine />
+            <p className="mt-6 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              Professional certifications and qualifications that showcase my expertise and continuous learning journey.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            {certificates.map(renderCertificateCard)}
+          </div>
+        </div>
+      </section>
+    </AnimatedContainer>
   );
 };
 

@@ -488,6 +488,16 @@ export const projects = [
     link: "https://github.com/MorkMongkul/Data-Science-Projects/tree/main/Bike_Rental_System_db",
     featured: false,
   },
+  {
+    id: 121,
+    title: "Course Management System",
+    description: "Designed a course management system with ER diagrams, SQL schema, sample data, and queries to manage courses and students. Implementing user authentication with role base access.",
+    category: "data",
+    subcategory: "database",
+    image: "/optimized-graphics/cms_edu.webp",
+    link: "https://data-science-projects-bc20.onrender.com",
+    featured: true,
+  }
 ];
 
 // Contact information
