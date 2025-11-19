@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import styled from "@emotion/styled";
 import { keyframes } from "@emotion/react";
+import { useLocomotiveScrollContext } from "@/contexts/LocomotiveScrollContext";
 
 const float = keyframes`
   0% { transform: translateY(0px); }
@@ -100,6 +101,7 @@ export default function HeroSection() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [cursorVisible, setCursorVisible] = useState(true);
   const professions = ["Graphic Designer", "Math Educator", "Data Scientist"];
+  const { scroll } = useLocomotiveScrollContext();
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -132,48 +134,83 @@ export default function HeroSection() {
   }, [text, isDeleting, professionIndex]);
 
   const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    if (scroll) {
+      scroll.scrollTo(`#${id}`, {
+        offset: -80,
+        duration: 1000,
+        easing: [0.25, 0.00, 0.35, 1.00],
+      });
+    } else {
+      // Fallback to native scroll
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   return (
-    <section id="home" className="pt-28 pb-16 md:pt-32 md:pb-24 bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-gray-800 relative">
+    <section
+      id="home"
+      data-scroll-section
+      className="pt-28 pb-16 md:pt-32 md:pb-24 bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-gray-800 relative"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <div className="md:w-1/2 mb-10 md:mb-0">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4">
+            <h1
+              data-scroll
+              data-scroll-speed="1.2"
+              className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4"
+            >
               <span className="text-dark dark:text-gray-200">Hi, I'm </span>
-              <span className="bg-gradient-to-r from-pink-500 to-cyan-500 bg-clip-text text-transparent">MORK Mongkul</span>
+              <span className="bg-gradient-to-r from-pink-500 to-cyan-500 bg-clip-text text-transparent">
+                MORK Mongkul
+              </span>
             </h1>
-            <div className="text-xl md:text-2xl font-medium text-gray-600 dark:text-gray-300 h-8 flex">
+            <div
+              data-scroll
+              data-scroll-speed="0.8"
+              className="text-xl md:text-2xl font-medium text-gray-600 dark:text-gray-300 h-8 flex"
+            >
               {text}
-              <span className={cursorVisible ? "inline-block w-2 bg-gray-600 dark:bg-gray-300" : "opacity-0 w-2"}>
+              <span
+                className={
+                  cursorVisible ? "inline-block w-2 bg-gray-600 dark:bg-gray-300" : "opacity-0 w-2"
+                }
+              >
                 |
               </span>
             </div>
-            <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-lg">
-              Bringing creativity, analytical thinking, and educational expertise 
-              to every project. I blend design aesthetics with data-driven insights.
+            <p
+              data-scroll
+              data-scroll-speed="0.6"
+              className="text-gray-600 dark:text-gray-400 mb-8 max-w-lg"
+            >
+              Bringing creativity, analytical thinking, and educational expertise to every project. I
+              blend design aesthetics with data-driven insights.
             </p>
-            <div className="flex space-x-4">
-              <Button 
+            <div data-scroll data-scroll-speed="0.4" className="flex space-x-4">
+              <Button
                 onClick={() => scrollToSection("projects")}
                 className="bg-gradient-to-r from-pink-500 to-cyan-500 hover:from-pink-600 hover:to-cyan-600 transition-all duration-300"
               >
                 View My Work
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => scrollToSection("contact")}
                 className="border-2 hover:bg-gradient-to-r hover:from-pink-500 hover:to-cyan-500 hover:border-transparent transition-all duration-300"
               >
                 Contact Me
               </Button>
             </div>
-            <SocialLinks>
+            <SocialLinks data-scroll data-scroll-speed="0.3">
               <a href="https://github.com/MORKMongkul" target="_blank" rel="noopener noreferrer">
                 <i className="fab fa-github"></i>
               </a>
-              <a href="https://www.linkedin.com/in/mork-mongkul-2b622620b/" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://www.linkedin.com/in/mork-mongkul-2b622620b/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <i className="fab fa-linkedin"></i>
               </a>
               <a href="https://t.me/morkmongkul" target="_blank" rel="noopener noreferrer">
@@ -181,13 +218,13 @@ export default function HeroSection() {
               </a>
             </SocialLinks>
           </div>
-          <div className="md:w-1/2 flex justify-center">
+          <div data-scroll data-scroll-speed="-0.8" className="md:w-1/2 flex justify-center">
             <ProfileContainer>
               <GlowEffect />
               <ProfileImage>
-                <img 
-                  src="/Profile.jpeg" 
-                  alt="MORK Mongkul" 
+                <img
+                  src="/official_me.png"
+                  alt="MORK Mongkul"
                   className="w-full h-full object-cover"
                 />
               </ProfileImage>

@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import styled from "@emotion/styled";
 import { keyframes } from "@emotion/react";
+import { useLocomotiveScrollContext } from "@/contexts/LocomotiveScrollContext";
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(20px); }
@@ -35,8 +36,7 @@ const SkillCard = styled.div`
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   transition: all 0.3s ease-in-out;
-  opacity: 0;
-  animation: ${fadeIn} 0.6s ease-out forwards;
+  opacity: 1;
 
   h3 {
     color: var(--tw-text-opacity);
@@ -62,7 +62,8 @@ export default function AboutSection() {
   const [displayText, setDisplayText] = useState("_");
   const [index, setIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const { scroll } = useLocomotiveScrollContext();
 
   const skills = [
     { name: "Data Science", icon: "chart-line", description: "Analyzing, Visualizing, and Modeling data to provide actionable insights using Python,Power BI, and Machine Learning tools.", proficiency: 80 },
@@ -71,20 +72,36 @@ export default function AboutSection() {
     { name: "Web Development", icon: "laptop-code", description: "Building intuitive and responsive websites with modern tools.", proficiency: 70 },
   ];
 
+  // Use Locomotive Scroll events instead of Intersection Observer
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-      },
-      { threshold: 0.1 }
-    );
+    if (!scroll || !sectionRef.current) return;
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const handleScroll = (args: any) => {
+      const section = sectionRef.current;
+      if (!section) return;
+
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.offsetHeight;
+      const scrollY = args.scroll.y;
+      const windowHeight = window.innerHeight;
+
+      // Check if section is in viewport
+      if (scrollY + windowHeight > sectionTop && scrollY < sectionTop + sectionHeight) {
+        setIsVisible(true);
+      }
+    };
+
+    scroll.on("scroll", handleScroll);
+    
+    // Initial check
+    if (scroll.scroll) {
+      handleScroll({ scroll: scroll.scroll });
     }
 
-    return () => observer.disconnect();
-  }, []);
+    return () => {
+      scroll.off("scroll", handleScroll);
+    };
+  }, [scroll]);
 
   useEffect(() => {
     if (index < text.length) {
@@ -102,31 +119,26 @@ export default function AboutSection() {
     <section
       ref={sectionRef}
       id="about"
+      data-scroll-section
       className="py-16 md:py-24 bg-white dark:bg-gray-900 relative"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 
+          data-scroll
+          data-scroll-speed="1.0"
           className="text-3xl md:text-4xl font-bold mb-12 text-center bg-gradient-to-r from-pink-500 to-cyan-500 bg-clip-text text-transparent"
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: `translateY(${isVisible ? 0 : '20px'})`,
-            transition: 'opacity 0.6s ease-out, transform 0.6s ease-out'
-          }}
         >
           {displayText}
         </h2>
 
         <div className="flex flex-col md:flex-row gap-12 relative">
           <div 
+            data-scroll
+            data-scroll-speed="0.5"
             className="md:w-1/2 relative"
-            style={{
-              opacity: isVisible ? 1 : 0,
-              transform: `translateX(${isVisible ? 0 : '-20px'})`,
-              transition: 'opacity 0.6s ease-out, transform 0.6s ease-out'
-            }}
           >
             <p className="text-gray-700 mb-6 leading-relaxed dark:text-gray-300">
-              I am a <span className="text-[#EC4899] font-medium dark:text-pink-400">Senior Graphic Designer</span> with nearly five years of experience,
+              I am a <span className="text-[#EC4899] font-medium dark:text-pink-400">Graphic Designer</span> with nearly five years of experience,
               specializing in branding, marketing,visuals design. Proficient in Adobe Photoshop, Illustrator, Premiere Pro and After Effects.
             </p>
             <p className="text-gray-700 mb-6 leading-relaxed dark:text-gray-300">
@@ -135,21 +147,22 @@ export default function AboutSection() {
               me to craft impactful and strategic designs. Passionate about teaching and inspiring future designers.
             </p>
             <a
-              href="/mork_mongkul_me.pdf"
-              download="mork_mongkul_me.pdf"
+              href="/Data_Scientist_CV.pdf"
+              download="Data_Scientist_CV.pdf"
               className="mt-4 inline-block px-6 py-3 text-lg font-medium text-white bg-gradient-to-r from-pink-500 to-cyan-500 rounded-lg shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:from-pink-600 hover:to-cyan-600"
             >
               Download CV
             </a>
           </div>
 
-          <div className="md:w-1/2 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div data-scroll data-scroll-speed="0.3" className="md:w-1/2 grid grid-cols-1 md:grid-cols-2 gap-6">
             {skills.map((skill, idx) => (
               <SkillCard
                 key={idx}
+                data-scroll
+                data-scroll-speed={`${0.3 + idx * 0.1}`}
                 style={{
-                  animationDelay: `${idx * 0.2}s`,
-                  opacity: isVisible ? 1 : 0
+                  animationDelay: `${idx * 0.2}s`
                 }}
               >
                 <div className="text-gray-700 dark:text-gray-100 mb-2 text-2xl">

@@ -1,31 +1,38 @@
 import { useState, useEffect } from "react";
 import ThemeToggle from "./ThemeToggle";
 import { HiMenuAlt3 } from "react-icons/hi";
+import { useLocomotiveScrollContext } from "@/contexts/LocomotiveScrollContext";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const { scroll } = useLocomotiveScrollContext();
   
   // Handle scroll event to highlight active section in navigation
   useEffect(() => {
-    const handleScroll = () => {
+    if (!scroll) return;
+
+    const handleScroll = (args: any) => {
+      // Get current scroll position
+      const scrollPosition = args.scroll.y;
       const sections = document.querySelectorAll("section[id]");
-      const scrollPosition = window.scrollY + 100;
 
       sections.forEach((section) => {
         const sectionTop = (section as HTMLElement).offsetTop;
         const sectionHeight = (section as HTMLElement).offsetHeight;
         const sectionId = section.getAttribute("id") || "";
 
-        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+        if (scrollPosition + 100 >= sectionTop && scrollPosition + 100 < sectionTop + sectionHeight) {
           setActiveSection(sectionId);
         }
       });
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    scroll.on("scroll", handleScroll);
+    return () => {
+      scroll.off("scroll", handleScroll);
+    };
+  }, [scroll]);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -45,10 +52,19 @@ export default function Header() {
     // Close mobile menu when a nav item is clicked
     setMobileMenuOpen(false);
     
-    // Scroll to the section
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+    // Scroll to the section using Locomotive Scroll
+    if (scroll) {
+      scroll.scrollTo(`#${id}`, {
+        offset: -80,
+        duration: 1000,
+        easing: [0.25, 0.00, 0.35, 1.00],
+      });
+    } else {
+      // Fallback to native scroll
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 

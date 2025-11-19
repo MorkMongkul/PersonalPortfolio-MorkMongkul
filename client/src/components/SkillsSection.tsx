@@ -8,9 +8,11 @@ import { SiDatadog, SiPython, SiJavascript, SiReact, SiFigma, SiAdobephotoshop,
          SiAdobeillustrator, SiTensorflow, SiScikitlearn, SiTableau, SiMysql, 
          SiPostgresql, SiMongodb, SiGithub, SiTypescript, SiNextdotjs, SiTailwindcss,
          SiNodedotjs, SiExpress, SiPrisma, SiRedux, SiFirebase, SiSupabase, SiFlask,
-         SiHtml5, SiCss3, SiAdobepremierepro, SiAdobeaftereffects } from "react-icons/si";
+         SiHtml5, SiCss3, SiAdobepremierepro, SiAdobeaftereffects, SiApachekafka, SiApachespark,
+         SiApacheairflow, SiPytorch } from "react-icons/si";
 import { FaRProject, FaBrain, FaServer, FaChartBar } from "react-icons/fa";
 import { IconType } from "react-icons";
+import { LogoLoop, LogoItem } from "./LogoLoop";
 
 const webDevSkills: Skill[] = [
   { name: "React.js", percentage: 90, icon: SiReact },
@@ -28,26 +30,28 @@ const webDevSkills: Skill[] = [
 ];
 
 const floatingIcons = [
-  { Icon: SiPython, size: 35, color: '#3776AB', name: 'Python' },
-  { Icon: SiJavascript, size: 35, color: '#F7DF1E', name: 'JavaScript' },
-  { Icon: SiReact, size: 40, color: '#61DAFB', name: 'React' },
-  { Icon: SiFigma, size: 30, color: '#F24E1E', name: 'Figma' },
-  { Icon: SiAdobephotoshop, size: 35, color: '#31A8FF', name: 'Photoshop' },
-  { Icon: SiAdobeillustrator, size: 35, color: '#FF9A00', name: 'Illustrator' },
-  { Icon: SiTensorflow, size: 35, color: '#FF6F00', name: 'TensorFlow' },
-  { Icon: SiScikitlearn, size: 35, color: '#F7931E', name: 'Scikit-learn' },
-  { Icon: SiTableau, size: 30, color: '#E97627', name: 'Tableau' },
-  { Icon: FaChartBar, size: 30, color: '#F2C811', name: 'Power BI' },
-  { Icon: SiMysql, size: 35, color: '#4479A1', name: 'MySQL' },
-  { Icon: SiPostgresql, size: 35, color: '#4169E1', name: 'PostgreSQL' },
-  { Icon: SiMongodb, size: 35, color: '#47A248', name: 'MongoDB' },
-  { Icon: FaRProject, size: 30, color: '#276DC3', name: 'R' },
-  { Icon: FaBrain, size: 35, color: '#FF5252', name: 'Machine Learning' },
-  { Icon: SiGithub, size: 40, color: '#181717', name: 'GitHub' },
-  { Icon: SiFlask, size: 35, color: '#000000', name: 'Flask' },
-  { Icon: SiSupabase, size: 35, color: '#3776AB', name: 'Supabase' },
-  { Icon: SiHtml5, size: 35, color: '#E97627', name: 'HTML' },
-  { Icon: SiCss3, size: 35, color: '#276DC3', name: 'CSS' },
+  { Icon: SiPython, size: 50, color: '#3776AB', name: 'Python' },
+  { Icon: SiJavascript, size: 50, color: '#F7DF1E', name: 'JavaScript' },
+  { Icon: SiReact, size: 55, color: '#61DAFB', name: 'React' },
+  { Icon: SiFirebase, size: 50, color: '#FFCA28', name: 'Firebase' },
+  { Icon: SiAdobephotoshop, size: 50, color: '#31A8FF', name: 'Photoshop' },
+  { Icon: SiAdobeillustrator, size: 50, color: '#FF9A00', name: 'Illustrator' },
+  { Icon: SiTensorflow, size: 50, color: '#FF6F00', name: 'TensorFlow' },
+  { Icon: SiPytorch, size: 50, color: '#EE4C2C', name: 'PyTorch' },
+  { Icon: SiScikitlearn, size: 50, color: '#F7931E', name: 'Scikit-learn' },
+  { Icon: SiTableau, size: 45, color: '#E97627', name: 'Tableau' },
+  { Icon: FaChartBar, size: 45, color: '#F2C811', name: 'Data Visualization' },
+  { Icon: SiMysql, size: 50, color: '#4479A1', name: 'MySQL' },
+  { Icon: SiPostgresql, size: 50, color: '#4169E1', name: 'PostgreSQL' },
+  { Icon: SiMongodb, size: 50, color: '#47A248', name: 'MongoDB' },
+  { Icon: FaRProject, size: 45, color: '#276DC3', name: 'R' },
+  { Icon: FaBrain, size: 50, color: '#FF5252', name: 'Keras' },
+  { Icon: SiGithub, size: 55, color: '#181717', name: 'GitHub' },
+  { Icon: SiApachekafka, size: 50, color: '#231F20', name: 'Apache Kafka' },
+  { Icon: SiApachespark, size: 50, color: '#E25A1C', name: 'Apache Spark' },
+  { Icon: SiApacheairflow, size: 50, color: '#017CEE', name: 'Apache Airflow' },
+  { Icon: SiHtml5, size: 50, color: '#E97627', name: 'HTML5' },
+  { Icon: SiCss3, size: 50, color: '#276DC3', name: 'CSS3' },
 ];
 
 const skillCategories = [
@@ -104,6 +108,8 @@ function SkillCard({ category, index }: {
 }) {
   return (
     <div 
+      data-scroll
+      data-scroll-speed={`${0.3 + index * 0.2}`}
       className="group relative overflow-hidden rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 transition-all duration-500"
       style={{ '--delay': `${index * 0.1}s` } as React.CSSProperties}
     >
@@ -251,13 +257,13 @@ function SkillCategory({ category, index }: {
 
 export default function SkillsSection() {
   return (
-    <section id="skills" className="py-16 md:py-24 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden">
+    <section id="skills" data-scroll-section className="py-16 md:py-24 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl md:text-4xl font-bold mb-16 text-center bg-gradient-to-r from-pink-500 to-violet-500 text-transparent bg-clip-text">
+        <h2 data-scroll data-scroll-speed="1.0" className="text-3xl md:text-4xl font-bold mb-16 text-center bg-gradient-to-r from-pink-500 to-violet-500 text-transparent bg-clip-text">
           My Skills
         </h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+        <div data-scroll data-scroll-speed="0.3" className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
           {skillCategories.map((category, index) => (
             <SkillCard 
               key={category.title} 
@@ -267,17 +273,36 @@ export default function SkillsSection() {
           ))}
         </div>
 
-        <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6 py-8 bg-white/10 dark:bg-gray-800/30 backdrop-blur-sm rounded-xl">
-          {floatingIcons.map((icon, index) => (
-            <FloatingIcon
-              key={index}
-              Icon={icon.Icon}
-              color={icon.color}
-              size={icon.size}
-              name={icon.name}
-              delay={index}
-            />
-          ))}
+        <div 
+          data-scroll
+          data-scroll-speed="0.2"
+          className="py-12 bg-white/10 dark:bg-gray-800/30 backdrop-blur-sm rounded-xl overflow-hidden"
+        >
+          <LogoLoop
+            logos={floatingIcons.map((icon) => ({
+              node: (
+                <icon.Icon
+                  style={{
+                    color: icon.color,
+                    fontSize: icon.size,
+                  }}
+                  className="opacity-90 dark:opacity-100 hover:opacity-100 transition-all duration-300 filter dark:brightness-110"
+                  title={icon.name}
+                />
+              ),
+              title: icon.name,
+              ariaLabel: icon.name,
+            })) as LogoItem[]}
+            speed={80}
+            direction="left"
+            logoHeight={60}
+            gap={64}
+            pauseOnHover={true}
+            fadeOut={true}
+            scaleOnHover={true}
+            ariaLabel="Technology stack logos"
+            className="w-full logoloop-dark-fade"
+          />
         </div>
       </div>
 

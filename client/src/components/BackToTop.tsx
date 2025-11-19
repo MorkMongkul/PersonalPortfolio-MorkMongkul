@@ -1,27 +1,41 @@
 import { useState, useEffect } from "react";
+import { useLocomotiveScrollContext } from "@/contexts/LocomotiveScrollContext";
 
 export default function BackToTop() {
   const [isVisible, setIsVisible] = useState(false);
+  const { scroll } = useLocomotiveScrollContext();
   
   // Show button when user scrolls down 300px
   useEffect(() => {
-    const toggleVisibility = () => {
-      if (window.pageYOffset > 300) {
+    if (!scroll) return;
+
+    const handleScroll = (args: any) => {
+      if (args.scroll.y > 300) {
         setIsVisible(true);
       } else {
         setIsVisible(false);
       }
     };
     
-    window.addEventListener("scroll", toggleVisibility);
-    return () => window.removeEventListener("scroll", toggleVisibility);
-  }, []);
+    scroll.on("scroll", handleScroll);
+    return () => {
+      scroll.off("scroll", handleScroll);
+    };
+  }, [scroll]);
   
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
+    if (scroll) {
+      scroll.scrollTo("top", {
+        duration: 1000,
+        easing: [0.25, 0.00, 0.35, 1.00],
+      });
+    } else {
+      // Fallback to native scroll
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
   };
   
   return (

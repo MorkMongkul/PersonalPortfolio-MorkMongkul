@@ -1,8 +1,27 @@
+import { useLocomotiveScrollContext } from "@/contexts/LocomotiveScrollContext";
+
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const { scroll } = useLocomotiveScrollContext();
+
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    if (scroll) {
+      scroll.scrollTo(`#${id}`, {
+        offset: -80,
+        duration: 1000,
+        easing: [0.25, 0.00, 0.35, 1.00],
+      });
+    } else {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
   
   return (
-    <footer className="py-8 bg-dark text-white">
+    <footer data-scroll-section className="py-8 bg-gray-900 dark:bg-gray-950 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center">
           <div className="mb-6 md:mb-0">
@@ -11,11 +30,11 @@ export default function Footer() {
           </div>
           
           <div className="flex flex-col md:flex-row md:space-x-8 space-y-4 md:space-y-0">
-            <a href="#home" className="text-gray-300 hover:text-white transition-colors">Home</a>
-            <a href="#about" className="text-gray-300 hover:text-white transition-colors">About</a>
-            <a href="#skills" className="text-gray-300 hover:text-white transition-colors">Skills</a>
-            <a href="#projects" className="text-gray-300 hover:text-white transition-colors">Projects</a>
-            <a href="#contact" className="text-gray-300 hover:text-white transition-colors">Contact</a>
+            <a href="#home" onClick={(e) => handleLinkClick(e, "home")} className="text-gray-300 hover:text-white transition-colors">Home</a>
+            <a href="#about" onClick={(e) => handleLinkClick(e, "about")} className="text-gray-300 hover:text-white transition-colors">About</a>
+            <a href="#skills" onClick={(e) => handleLinkClick(e, "skills")} className="text-gray-300 hover:text-white transition-colors">Skills</a>
+            <a href="#projects" onClick={(e) => handleLinkClick(e, "projects")} className="text-gray-300 hover:text-white transition-colors">Projects</a>
+            <a href="#contact" onClick={(e) => handleLinkClick(e, "contact")} className="text-gray-300 hover:text-white transition-colors">Contact</a>
           </div>
         </div>
         

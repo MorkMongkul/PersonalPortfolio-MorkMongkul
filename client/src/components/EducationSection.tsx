@@ -1,15 +1,10 @@
 import React, { useRef, useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import styled from "@emotion/styled";
-import { keyframes } from "@emotion/react";
 import { FaGraduationCap, FaSchool, FaCertificate } from "react-icons/fa";
+import { useLocomotiveScrollContext } from "@/contexts/LocomotiveScrollContext";
+import Timeline, { TimelineEntry } from "./Timeline";
 
-const fadeIn = keyframes`
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-`;
-
-const EducationCard = styled(motion.div)`
+const EducationCard = styled.div`
   position: relative;
   padding: 1.5rem;
   border-radius: 0.75rem;
@@ -79,27 +74,43 @@ const GradientLine = styled.div`
 const EducationSection = () => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
+  const { scroll } = useLocomotiveScrollContext();
 
+  // Use Locomotive Scroll events instead of Intersection Observer
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-      },
-      { threshold: 0.1 }
-    );
+    if (!scroll || !sectionRef.current) return;
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const handleScroll = (args: any) => {
+      const section = sectionRef.current as HTMLElement;
+      if (!section) return;
+
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.offsetHeight;
+      const scrollY = args.scroll.y;
+      const windowHeight = window.innerHeight;
+
+      if (scrollY + windowHeight > sectionTop && scrollY < sectionTop + sectionHeight) {
+        setIsVisible(true);
+      }
+    };
+
+    scroll.on("scroll", handleScroll);
+    
+    if (scroll.scroll) {
+      handleScroll({ scroll: scroll.scroll });
     }
 
-    return () => observer.disconnect();
-  }, []);
+    return () => {
+      scroll.off("scroll", handleScroll);
+    };
+  }, [scroll]);
 
   const educationItems = [
     {
       degree: "Bachelor of Data Science in Engineering",
       institution: "Institute of Technology of Cambodia",
       period: "2021-2026",
+      description: "Pursuing a comprehensive degree in data science and engineering, focusing on machine learning, data analysis, and software development. Gaining expertise in Python, statistical analysis, and building data-driven solutions.",
       icon: <FaGraduationCap />,
       color: "#3B82F6"
     },
@@ -107,6 +118,7 @@ const EducationSection = () => {
       degree: "Graphic Design and Media",
       institution: "Instinct Institute",
       period: "2022-2023 (Graduate)",
+      description: "Completed a professional certification program in graphic design and media, specializing in digital design, branding, and visual communication. Mastered Adobe Creative Suite and developed skills in creating compelling visual narratives.",
       icon: <FaCertificate />,
       color: "#EC4899"
     },
@@ -114,14 +126,55 @@ const EducationSection = () => {
       degree: "BAC II (National Exam)",
       institution: "Hunsen Kransramor High School",
       period: "2018-2021",
+      description: "Successfully completed high school education and passed the national examination with excellent results. Developed strong foundation in mathematics, sciences, and critical thinking skills.",
       icon: <FaSchool />,
       color: "#10B981"
     },
   ];
 
+  const timelineData: TimelineEntry[] = educationItems.map((item) => ({
+    title: item.period,
+    badge: item.period,
+    content: (
+      <div>
+        {/* Year Badge */}
+        {item.period && (
+          <div className="mb-4">
+            <span className="px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 whitespace-nowrap shadow-sm">
+              {item.period}
+            </span>
+          </div>
+        )}
+        
+        {/* Icon and Title */}
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-xl">
+            {item.icon}
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+              {item.degree}
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 font-medium">
+              {item.institution}
+            </p>
+          </div>
+        </div>
+        
+        {/* Description */}
+        {item.description && (
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+            {item.description}
+          </p>
+        )}
+      </div>
+    ),
+  }));
+
   return (
     <section 
       id="education" 
+      data-scroll-section
       className="py-16 md:py-24 bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-gray-800 relative overflow-hidden"
       ref={sectionRef}
     >
@@ -130,10 +183,9 @@ const EducationSection = () => {
       <div className="absolute bottom-20 right-10 w-40 h-40 bg-pink-500/10 rounded-full blur-3xl"></div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
-          transition={{ duration: 0.6 }}
+        <div
+          data-scroll
+          data-scroll-speed="1.0"
           className="mb-12 text-center"
         >
           <GradientText className="text-3xl md:text-4xl font-bold mb-4">Education</GradientText>
@@ -141,36 +193,10 @@ const EducationSection = () => {
           <p className="mt-6 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             My academic journey and educational qualifications that have shaped my knowledge and expertise.
           </p>
-        </motion.div>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {educationItems.map((item, index) => (
-            <EducationCard
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ 
-                opacity: isVisible ? 1 : 0, 
-                y: isVisible ? 0 : 30 
-              }}
-              transition={{ duration: 0.5, delay: index * 0.2 }}
-              className="bg-white dark:bg-gray-800/50 shadow-lg"
-            >
-              <IconContainer className="icon-container">
-                {item.icon}
-              </IconContainer>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                {item.degree}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 mb-2 font-medium">
-                {item.institution}
-              </p>
-              <div className="flex items-center mt-4">
-                <span className="px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300">
-                  {item.period}
-                </span>
-              </div>
-            </EducationCard>
-          ))}
+        <div className="max-w-5xl mx-auto">
+          <Timeline data={timelineData} />
         </div>
       </div>
     </section>

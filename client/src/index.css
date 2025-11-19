@@ -1,6 +1,83 @@
+/* Locomotive Scroll Styles */
+@import 'locomotive-scroll/dist/locomotive-scroll.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Locomotive Scroll Base Styles */
+html.has-scroll-smooth {
+  overflow: hidden;
+}
+
+html.has-scroll-dragging {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.has-scroll-smooth body {
+  overflow: hidden;
+}
+
+/* Custom Nav Link Styling */
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #3B82F6;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after, 
+.nav-link.active::after {
+  width: 100%;
+}
+
+/* Locomotive Scroll Custom Styles */
+.has-scroll-smooth [data-scroll-container] {
+  min-height: 100vh;
+  perspective: 1px; /* Fix for some 3D context issues */
+}
+
+/* Ensure Footer is visible */
+footer[data-scroll-section] {
+  position: relative;
+  z-index: 2;
+}
+
+/* Contact Section Specifics */
+#contact {
+  position: relative;
+  z-index: 1;
+  background-color: #E8E9F3; /* Ensure background color is applied */
+}
+
+#contact canvas {
+  /* Ensure canvas is clickable */
+  pointer-events: auto !important; 
+  /* Ensure no external transform overrides interfere with Spline */
+  touch-action: none;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
 
 @layer base {
   * {
@@ -26,23 +103,3 @@
   }
 }
 
-/* Custom Nav Link Styling */
-.nav-link {
-  position: relative;
-}
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background-color: #3B82F6;
-  transition: width 0.3s ease;
-}
-
-.nav-link:hover::after, 
-.nav-link.active::after {
-  width: 100%;
-}

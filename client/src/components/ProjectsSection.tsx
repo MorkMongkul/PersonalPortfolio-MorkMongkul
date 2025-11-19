@@ -1,6 +1,5 @@
 import { useState, useCallback } from "react";
 import { projects as fallbackProjects } from "@/lib/constants";
-import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import type { Project } from "@shared/schema";
@@ -21,6 +20,9 @@ interface ProjectType {
   thumbnailImage?: string;
   link: string;
   featured?: boolean;
+  technologies?: string[];
+  date?: string;
+  githubLink?: string;
 }
 
 export default function ProjectsSection() {
@@ -70,7 +72,7 @@ export default function ProjectsSection() {
              subcategory === 'print' ? 'Print Ads' :
              'Social Media'}
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
             {projects.map((project) => renderProjectCard(project))}
           </div>
         </div>
@@ -84,7 +86,7 @@ export default function ProjectsSection() {
              subcategory === 'database' ? 'Database' :
              'Data Visualization'}
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
             {projects.map((project) => renderProjectCard(project))}
           </div>
         </div>
@@ -93,82 +95,117 @@ export default function ProjectsSection() {
     return displayProjects.map((project) => renderProjectCard(project as ProjectType));
   };
 
-  const renderProjectCard = (project: ProjectType) => (
-    <div 
-      className="project-card group" 
-      key={project.id}
-      data-project-id={project.id}
-      style={{ 
-        opacity: 0,
-        animation: 'fadeIn 0.6s ease-out forwards',
-        animationDelay: `${project.id * 0.1}s`
-      }}
-      onClick={() => project.category === 'design' ? setModalProject(project) : undefined}
-    >
-      <div className="relative overflow-hidden rounded-xl shadow-lg transition-all duration-500 hover:shadow-2xl dark:shadow-gray-800/30">
-        <div className="relative h-72">
-          {/* Simple image display */}
-          <img 
-            src={project.image}
-            alt={project.title}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-            loading="lazy"
-          />
+  const getDefaultTechnologies = (category: string): string[] => {
+    switch (category) {
+      case 'design':
+        return ['Adobe Photoshop', 'Adobe Illustrator', 'Figma'];
+      case 'data':
+        return ['Python', 'Machine Learning', 'Data Visualization', 'SQL'];
+      case 'education':
+        return ['React', 'TypeScript', 'TailwindCSS'];
+      default:
+        return ['React', 'TypeScript', 'TailwindCSS'];
+    }
+  };
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-6 group-hover:translate-y-0 transition-transform duration-500">
-              <span className={`inline-block px-3 py-1 text-sm font-medium rounded-full mb-3 ${
-                project.category === "design" 
-                  ? "text-[#EC4899] bg-[#EC4899]/10" 
-                  : project.category === "education" 
-                    ? "text-[#10B981] bg-[#10B981]/10" 
-                    : "text-primary bg-primary/10"
-              }`}>
-                {project.category === "design" 
-                  ? "Graphic Design" 
-                  : project.category === "education" 
-                    ? "Education" 
-                    : "Data Science"}
-              </span>
-              <h3 className="text-xl font-bold text-white mb-2">{project.title}</h3>
-              <p className="text-gray-200 text-sm mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                {project.description}
-              </p>
-              {project.category === 'data' ? (
-                <a 
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center text-sm font-medium text-primary hover:text-primary/80 transition-colors"
-                >
-                  View on GitHub
-                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </a>
-              ) : (
-                <a 
-                  href={project.link}
-                  className={`inline-flex items-center text-sm font-medium ${
-                    project.category === "design" 
-                      ? "text-[#EC4899] hover:text-[#EC4899]/80" 
-                      : project.category === "education" 
-                        ? "text-[#10B981] hover:text-[#10B981]/80" 
-                        : "text-primary hover:text-primary/80"
-                  } transition-colors`}
-                >
-                  View Project
-                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </a>
-              )}
+  const renderProjectCard = (project: ProjectType) => {
+    const technologies = project.technologies || getDefaultTechnologies(project.category);
+    const date = project.date || '2024';
+    
+    // Determine which link to use (prioritize githubLink, then link)
+    const projectLink = project.githubLink || (project.link && project.link !== '#' ? project.link : null);
+    
+    const cardContent = (
+      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 h-full flex flex-col cursor-pointer">
+        {/* Image Section with Border */}
+        <div className="relative w-full h-64 bg-gray-100 dark:bg-gray-900 border-b-2 border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="w-full h-full p-2">
+            <div className="w-full h-full border-2 border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
+              <img 
+                src={project.image}
+                alt={project.title}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
           </div>
         </div>
+
+        {/* Content Section */}
+        <div className="p-6 flex-1 flex flex-col">
+          {/* Title */}
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+            {project.title}
+          </h3>
+
+          {/* Date */}
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            {date}
+          </p>
+
+          {/* Description */}
+          <p className="text-gray-600 dark:text-gray-300 mb-6 flex-1 leading-relaxed">
+            {project.description}
+          </p>
+
+          {/* Technologies */}
+          <div className="flex flex-wrap gap-2">
+            {technologies.slice(0, 4).map((tech, idx) => (
+              <span
+                key={idx}
+                className="px-3 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full"
+              >
+                {tech}
+              </span>
+            ))}
+            {technologies.length > 4 && (
+              <span className="px-3 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full">
+                +{technologies.length - 4}
+              </span>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
-  );
+    );
+
+    // If there's a link, wrap in anchor tag, otherwise just return the card
+    if (projectLink) {
+      return (
+        <a
+          key={project.id}
+          href={projectLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block"
+          data-project-id={project.id}
+          data-scroll
+          data-scroll-speed={`${0.3 + (project.id % 5) * 0.15}`}
+          onClick={(e) => {
+            // For design projects, still allow modal if needed
+            if (project.category === 'design' && !projectLink) {
+              e.preventDefault();
+              setModalProject(project);
+            }
+          }}
+        >
+          {cardContent}
+        </a>
+      );
+    }
+
+    return (
+      <div 
+        className="group" 
+        key={project.id}
+        data-project-id={project.id}
+        data-scroll
+        data-scroll-speed={`${0.3 + (project.id % 5) * 0.15}`}
+        onClick={() => project.category === 'design' ? setModalProject(project) : undefined}
+      >
+        {cardContent}
+      </div>
+    );
+  };
 
   // Modal for Design Project Full View
   const renderModal = () => modalProject && (
@@ -191,14 +228,14 @@ export default function ProjectsSection() {
   );
 
   return (
-    <section id="projects" className="py-16 md:py-24 bg-white dark:bg-gray-900">
+    <section id="projects" data-scroll-section className="py-16 md:py-24 bg-white dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="section-header text-3xl md:text-4xl font-bold mb-4 text-center dark:text-white">My Projects</h2>
-        <p className="text-gray-600 dark:text-gray-400 text-center mb-12 max-w-2xl mx-auto">
+        <h2 data-scroll data-scroll-speed="1.0" className="section-header text-3xl md:text-4xl font-bold mb-4 text-center dark:text-white">My Projects</h2>
+        <p data-scroll data-scroll-speed="0.6" className="text-gray-600 dark:text-gray-400 text-center mb-12 max-w-2xl mx-auto">
           A selection of my recent work across graphic design, educational content, and data analysis projects.
         </p>
         
-        <div className="mb-8 flex justify-center">
+        <div data-scroll data-scroll-speed="0.4" className="mb-8 flex justify-center">
           <div className="inline-flex p-1 bg-gray-100 dark:bg-gray-800 rounded-lg">
             <button 
               className={`px-4 py-2 rounded-lg transition-all duration-300 ${
@@ -243,7 +280,7 @@ export default function ProjectsSection() {
           </div>
         </div>
         
-        <div className="grid grid-cols-1 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {displayProjects.length === 0 ? (
             // Show empty state
             <div className="col-span-full text-center py-10">
@@ -253,15 +290,6 @@ export default function ProjectsSection() {
             // Display projects
             renderProjects()
           )}
-        </div>
-        
-        <div className="mt-12 text-center">
-          <Button 
-            variant="outline"
-            className="px-8 py-3 text-lg font-medium border-2 hover:bg-gradient-to-r hover:from-pink-500 hover:to-violet-500 hover:border-transparent hover:text-white transition-all duration-300"
-          >
-            View All Projects
-          </Button>
         </div>
       </div>
       {renderModal()}
@@ -278,16 +306,7 @@ export default function ProjectsSection() {
             margin-left: auto;
             margin-right: auto;
           }
-          @keyframes fadeIn {
-            from {
-              opacity: 0;
-              transform: translateY(20px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
+          /* Fade-in animations now handled by Locomotive Scroll */
           .project-card:hover .project-overlay {
             opacity: 1;
           }

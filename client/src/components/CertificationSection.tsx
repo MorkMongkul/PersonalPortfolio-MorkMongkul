@@ -1,17 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { FaAward, FaCertificate, FaMedal, FaTimes } from "react-icons/fa";
 import styled from "@emotion/styled";
-import { keyframes } from "@emotion/react";
-
-const shimmer = keyframes`
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-`;
+import { useLocomotiveScrollContext } from "@/contexts/LocomotiveScrollContext";
 
 const GradientText = styled.h2`
   background: linear-gradient(to right, #EC4899, #8B5CF6);
@@ -29,22 +19,7 @@ const GradientLine = styled.div`
   border-radius: 2px;
 `;
 
-const fadeInAnimation = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`;
-
-const AnimatedContainer = styled.div`
-  .fade-in {
-    animation: ${fadeInAnimation} 0.5s ease-out forwards;
-  }
-`;
+// Animations now handled by Locomotive Scroll via data-scroll-class
 
 interface Certificate {
   id: number;
@@ -137,28 +112,42 @@ const CertificationSection = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [selectedCert, setSelectedCert] = useState<Certificate | null>(null);
   const sectionRef = useRef(null);
+  const { scroll } = useLocomotiveScrollContext();
   
+  // Use Locomotive Scroll events instead of Intersection Observer
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-      },
-      { threshold: 0.1 }
-    );
+    if (!scroll || !sectionRef.current) return;
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const handleScroll = (args: any) => {
+      const section = sectionRef.current as HTMLElement;
+      if (!section) return;
+
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.offsetHeight;
+      const scrollY = args.scroll.y;
+      const windowHeight = window.innerHeight;
+
+      if (scrollY + windowHeight > sectionTop && scrollY < sectionTop + sectionHeight) {
+        setIsVisible(true);
+      }
+    };
+
+    scroll.on("scroll", handleScroll);
+    
+    if (scroll.scroll) {
+      handleScroll({ scroll: scroll.scroll });
     }
 
-    return () => observer.disconnect();
-  }, []);
+    return () => {
+      scroll.off("scroll", handleScroll);
+    };
+  }, [scroll]);
 
   const renderCertificateCard = (certificate: Certificate) => (
-    <motion.div
+    <div
       key={certificate.id}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
-      transition={{ duration: 0.5, delay: certificate.id * 0.1 }}
+      data-scroll
+      data-scroll-speed={`${0.3 + (certificate.id % 4) * 0.15}`}
       className="group cursor-pointer"
       onClick={() => setSelectedCert(selectedCert?.id === certificate.id ? null : certificate)}
     >
@@ -183,14 +172,9 @@ const CertificationSection = () => {
             </span>
           </div>
           
-          <AnimatePresence>
-            {selectedCert?.id === certificate.id && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3 }}
-                className="mt-4"
+          {selectedCert?.id === certificate.id && (
+              <div
+                className="mt-4 animate-in fade-in duration-300"
               >
                 <div className="relative w-full h-[300px] rounded-lg overflow-hidden">
                   <img
@@ -199,18 +183,17 @@ const CertificationSection = () => {
                     className="w-full h-full object-contain"
                   />
                 </div>
-              </motion.div>
+              </div>
             )}
-          </AnimatePresence>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 
   return (
-    <AnimatedContainer>
-      <section 
+    <section 
         id="certifications" 
+        data-scroll-section
         className="py-16 md:py-24 bg-white dark:bg-gray-900 relative overflow-hidden"
         ref={sectionRef}
       >
@@ -221,10 +204,9 @@ const CertificationSection = () => {
         </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
-            transition={{ duration: 0.6 }}
+          <div
+            data-scroll
+            data-scroll-speed="1.0"
             className="mb-12 text-center"
           >
             <GradientText className="text-3xl md:text-4xl font-bold mb-4">
@@ -234,14 +216,13 @@ const CertificationSection = () => {
             <p className="mt-6 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
               Professional certifications and qualifications that showcase my expertise and continuous learning journey.
             </p>
-          </motion.div>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+          <div data-scroll data-scroll-speed="0.3" className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
             {certificates.map(renderCertificateCard)}
           </div>
         </div>
       </section>
-    </AnimatedContainer>
   );
 };
 
