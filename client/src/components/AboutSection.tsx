@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import styled from "@emotion/styled";
 import { keyframes } from "@emotion/react";
 import { useLocomotiveScrollContext } from "@/contexts/LocomotiveScrollContext";
+import { trackDownload } from "@/lib/analytics";
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(20px); }
@@ -149,6 +150,7 @@ export default function AboutSection() {
             <a
               href="/Data_Scientist_CV.pdf"
               download="Data_Scientist_CV.pdf"
+              onClick={() => trackDownload("Data_Scientist_CV.pdf")}
               className="mt-4 inline-block px-6 py-3 text-lg font-medium text-white bg-gradient-to-r from-pink-500 to-cyan-500 rounded-lg shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:from-pink-600 hover:to-cyan-600"
             >
               Download CV

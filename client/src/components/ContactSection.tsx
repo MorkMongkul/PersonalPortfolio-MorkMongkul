@@ -1,4 +1,5 @@
 import { contactInfo } from "@/lib/constants";
+import { trackExternalLink, trackContactInteraction } from "@/lib/analytics";
 
 export default function ContactSection() {
   return (
@@ -26,6 +27,7 @@ export default function ContactSection() {
               <p className="font-medium">Email</p>
               <a
                 href={`mailto:${contactInfo.email}`}
+                onClick={() => trackContactInteraction('email_click')}
                 className="inline-flex items-center gap-2 text-primary hover:underline"
               >
                 <span>{contactInfo.email}</span>
@@ -39,6 +41,7 @@ export default function ContactSection() {
                   href={contactInfo.telegram}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackExternalLink(contactInfo.telegram, 'Telegram')}
                   className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-all shadow-md"
                   aria-label="Telegram"
                 >
@@ -48,6 +51,7 @@ export default function ContactSection() {
                   href={contactInfo.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackExternalLink(contactInfo.linkedin, 'LinkedIn')}
                   className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-600 hover:bg-[#0077b5] hover:text-white transition-all shadow-md"
                   aria-label="LinkedIn"
                 >
@@ -57,6 +61,7 @@ export default function ContactSection() {
                   href={contactInfo.github}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackExternalLink(contactInfo.github, 'GitHub')}
                   className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-600 hover:bg-[#333] hover:text-white transition-all shadow-md"
                   aria-label="GitHub"
                 >

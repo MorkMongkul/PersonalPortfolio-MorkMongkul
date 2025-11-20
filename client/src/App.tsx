@@ -3,6 +3,7 @@ import { Route, Switch } from 'wouter';
 import Home from '@/pages/Home';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Toaster } from '@/components/ui/toaster';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 // Lazy-loaded components for better performance
 const NotFound = lazy(() => import('@/pages/not-found'));
@@ -16,6 +17,7 @@ const Loading = () => (
 
 function App() {
   const { theme } = useTheme();
+  useAnalytics(); // Initialize analytics tracking
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
